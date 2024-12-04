@@ -9,30 +9,29 @@ namespace TaskService.Infrastructure.ContextConfigurations
         public void Configure(EntityTypeBuilder<Company> builder)
         {
             builder.HasMany(c => c.Owners)
-                .WithMany(u => u.Companies)
-                .UsingEntity<Dictionary<string, object>>("CompaniesOwners",
-                    cm => cm.HasOne<User>()
-                    .WithMany()
-                    .HasForeignKey("UserId")
-                    .OnDelete(DeleteBehavior.Cascade),
-                    cm => cm.HasOne<Company>()
-                    .WithMany()
-                    .HasForeignKey("CompanyId")
-                    .OnDelete(DeleteBehavior.Cascade)
-            );
+                .WithMany(u => u.CompaniesOwner)
+                .UsingEntity<Dictionary<string, object>>("CompanyOwners",
+                    j => j.HasOne<User>()
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade),
+                    j => j.HasOne<Company>()
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade));
+
 
             builder.HasMany(c => c.Managers)
-                .WithMany(u => u.Companies)
+                .WithMany(u => u.CompaniesManager)
                 .UsingEntity<Dictionary<string, object>>("CompaniesManagers",
                     cm => cm.HasOne<User>()
-                    .WithMany()
-                    .HasForeignKey("UserId")
-                    .OnDelete(DeleteBehavior.Cascade),
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade),
                     cm => cm.HasOne<Company>()
-                    .WithMany()
-                    .HasForeignKey("CompanyId")
-                    .OnDelete(DeleteBehavior.Cascade)
-            );
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade));
 
             builder.HasMany(c => c.Performers)
                 .WithOne(p => p.Company)

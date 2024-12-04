@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using UnionService.Domain.Entities;
 using UnionService.Domain.Interfaces;
 
@@ -19,15 +20,8 @@ namespace UnionService.Application.UseCases
             {
                 Name = request.Name,
                 Description = request.Description,
-                LogoContentType = request.LogoContentType ?? null,
-                LogoData = request.LogoData ?? null,
-                Owners = new List<User>(),
-                Managers = new List<User>(),
-                Performers = new List<PerformerInCompany>(),
-                Teams = new List<Team>(),
-                Accesses = new List<Access>(),
-                Tasks = new List<BaseTaskInfo>(),
-                DateTimeCheckers = new List<DateTimeChecker>()
+                LogoContentType = request.ImageFile?.ContentType,
+                LogoData = ConvertToByteArray(request.ImageFile)
             };
 
             var user = await _unitOfWork.Users.GetAsync(u => u.Id == request.UserId);
@@ -35,12 +29,26 @@ namespace UnionService.Application.UseCases
             {
                 throw new ArgumentException($"User with Id {request.UserId} does not exist.");
             }
-            company.Owners.Add(user);
 
             _unitOfWork.Companies.Create(company);
+
+            await _unitOfWork.SaveAsync();
+
+            company.Owners!.Add(user);
+
             await _unitOfWork.SaveAsync();
 
             return Unit.Value;
+        }
+
+        private byte[]? ConvertToByteArray(IFormFile? file)
+        {
+            if (file is null)
+                return null;
+
+            using var memoryStream = new MemoryStream();
+            file.CopyTo(memoryStream);
+            return memoryStream.ToArray();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using TaskService.Domain.Entities;
 using TaskService.Domain.Interfaces;
 
 namespace TaskService.Application.UseCases
@@ -34,11 +35,22 @@ namespace TaskService.Application.UseCases
             if (existingCompany.Tasks == null || !existingCompany.Tasks.Contains(existingTask))
                 throw new ArgumentException("User have no permisson.");
 
-            _unitOfWork.TasksInfo.Delete(existingTask);
+            RemoveTask(existingTask);
 
             await _unitOfWork.SaveAsync();
 
             return Unit.Value;
+        }
+
+        private void RemoveTask(BaseTaskInfo task)
+        {
+            foreach (var childTask in task.ChildTasks!)
+                RemoveTask(childTask);
+
+            if (task.Data != null)
+                _unitOfWork.TasksData.Delete(task.Data);
+
+            _unitOfWork.TasksInfo.Delete(task);
         }
     }
 }

@@ -13,6 +13,6 @@ namespace UnionService.Domain.Entities
         public string? Description { get; set; }
 
         public virtual Company? Company { get; set; }
-        public virtual ICollection<User>? Members { get; set; }
+        public virtual ICollection<User>? Members { get; set; } = new HashSet<User>();
     }
 }

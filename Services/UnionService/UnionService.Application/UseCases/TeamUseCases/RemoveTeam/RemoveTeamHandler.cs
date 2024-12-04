@@ -31,6 +31,14 @@ namespace UnionService.Application.UseCases
                 throw new ArgumentException($"Team with Id {request.TeamId} does not exist.");
             }
 
+            var invitationsToRemove = await _unitOfWork.Invitations.GetAllAsync(i => i.TeamId == existingTeam.Id, 1, int.MaxValue);
+
+            if (invitationsToRemove != null)
+            {
+                foreach (var invitation in invitationsToRemove)
+                    _unitOfWork.Invitations.Delete(invitation);
+            }
+
             _unitOfWork.Teams.Delete(existingTeam);
             await _unitOfWork.SaveAsync();
 

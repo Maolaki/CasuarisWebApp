@@ -34,7 +34,6 @@ namespace AuthService.API.Controllers
         }
 
         [HttpPost("refresh")]
-        [Authorize]
         public async Task<IActionResult> RefreshTokens([FromBody] RefreshTokensCommand command)
         {
             var newAccessToken = await _mediator.Send(command);

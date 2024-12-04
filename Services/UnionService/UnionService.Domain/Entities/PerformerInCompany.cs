@@ -18,6 +18,6 @@ namespace UnionService.Domain.Entities
 
         public virtual User? User { get; set; }
         public virtual Company? Company { get; set; }
-        public virtual List<WorkLog>? WorkLogs { get; set; }
+        public virtual ICollection<WorkLog>? WorkLogs { get; set; } = new HashSet<WorkLog>();
     }
 }

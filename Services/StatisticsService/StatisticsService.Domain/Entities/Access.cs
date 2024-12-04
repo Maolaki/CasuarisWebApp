@@ -12,6 +12,6 @@ namespace StatisticsService.Domain.Entities
         public int TaskId { get; set; }
         
         public virtual Company? Company { get; set; }
-        public virtual List<User>? Performers { get; set; }
+        public virtual ICollection<User>? Performers { get; set; } = new HashSet<User>();
     }
 }

@@ -50,6 +50,17 @@ namespace UnionService.API.Controllers
             return Ok("Company removed successfully.");
         }
 
+        [HttpDelete("remove-worker")]
+        [Authorize, ServiceFilter(typeof(EnsureAuthenticatedUserFilter))]
+        public async Task<IActionResult> RemoveCompanyWorker([FromBody] RemoveCompanyWorkerCommand command)
+        {
+            if (User.Identity!.Name != command.username)
+                return BadRequest("User is not authenticated.");
+
+            await _mediator.Send(command);
+            return Ok("Worker removed from a company successfully.");
+        }
+
         [HttpPost("add-worker")]
         [Authorize, ServiceFilter(typeof(EnsureAuthenticatedUserFilter))]
         public async Task<IActionResult> AddCompanyWorker([FromBody] AddCompanyWorkerCommand command)
@@ -83,7 +94,7 @@ namespace UnionService.API.Controllers
             return Ok("DateTime checker removed successfully.");
         }
 
-        [HttpGet("get-companies")]
+        [HttpPost("get-companies")]
         [Authorize, ServiceFilter(typeof(EnsureAuthenticatedUserFilter))]
         public async Task<IActionResult> GetCompanies([FromBody] GetCompaniesQuery query)
         {

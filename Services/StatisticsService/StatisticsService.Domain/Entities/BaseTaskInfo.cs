@@ -9,7 +9,7 @@ namespace StatisticsService.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int CompanyId { get; set; }
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
         public decimal Budget { get; set; }
@@ -18,6 +18,6 @@ namespace StatisticsService.Domain.Entities
 
         public virtual Company? Company { get; set; }
         public virtual BaseTaskInfo? ParentTask { get; set; }
-        public virtual ICollection<BaseTaskInfo>? ChildTasks { get; set; }
+        public virtual ICollection<BaseTaskInfo>? ChildTasks { get; set; } = new HashSet<BaseTaskInfo>();
     }
 }

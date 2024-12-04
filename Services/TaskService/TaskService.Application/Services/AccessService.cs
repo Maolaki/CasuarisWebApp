@@ -19,15 +19,15 @@ namespace TaskService.Application.Services
 
             var existingOwner = existingCompany.Owners?.FirstOrDefault(u => u.Username == username);
             if (existingCompany.Owners is null || existingOwner == null)
-                return false;
+                return true;
 
-            return true;
+            return false;
         }
 
         public async Task<bool> CheckManagerAccessAsync(int CompanyId, string username)
         {
-            if (await CheckOwnerAccessAsync(CompanyId, username))
-                return true;
+            if (!await CheckOwnerAccessAsync(CompanyId, username))
+                return false;
 
             var existingCompany = await _unitOfWork.Companies.GetAsync(c => c.Id == CompanyId);
             if (existingCompany == null)
@@ -35,9 +35,9 @@ namespace TaskService.Application.Services
 
             var existingManager = existingCompany.Managers?.FirstOrDefault(u => u.Username == username);
             if (existingCompany.Managers is null || existingManager == null)
-                return false;
+                return true;
 
-            return true;
+            return false;
         }
 
         public async Task<bool> CheckPerformerTaskAccessAsync(int CompanyId, int TaskInfoId, string username)
@@ -51,9 +51,9 @@ namespace TaskService.Application.Services
                 throw new ArgumentException($"Company with Id {CompanyId} don't have Access with TaskId {TaskInfoId}.");
 
             if (taskAccess.Performers?.FirstOrDefault(p => p.Username == username) is not null)
-                return true;
+                return false;
 
-            return false;
+            return true;
         }
     }
 }

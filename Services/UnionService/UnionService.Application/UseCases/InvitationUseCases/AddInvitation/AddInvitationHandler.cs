@@ -34,6 +34,9 @@ namespace UnionService.Application.UseCases
 
             switch (request.Type)
             {
+                case Domain.Enums.InvitationType.Company:
+
+                    break;
 
                 case Domain.Enums.InvitationType.Team:
                     var existingTeam = existingCompany.Teams!.FirstOrDefault(t => t.Id == request.TeamId);

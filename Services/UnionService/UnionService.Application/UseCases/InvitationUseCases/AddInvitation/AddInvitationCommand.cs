@@ -8,7 +8,7 @@ namespace UnionService.Application.UseCases
         int UserId,
         string username,
         int CompanyId,
-        int TeamId,
+        int? TeamId,
         InvitationType Type
     ) : IRequest<Unit>;
 }

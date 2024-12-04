@@ -12,6 +12,6 @@ namespace UnionService.Domain.Entities
         public int InfoId { get; set; }
 
         public virtual BaseTaskInfo? Info { get; set; }
-        public virtual ICollection<Resource>? Resources { get; set; }
+        public virtual ICollection<Resource>? Resources { get; set; } = new HashSet<Resource>();
     }
 }

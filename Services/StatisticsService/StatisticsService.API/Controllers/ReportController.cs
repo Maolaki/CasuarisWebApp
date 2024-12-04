@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using StatisticsService.Application.UseCases;
 using Microsoft.AspNetCore.Authorization;
@@ -12,15 +11,13 @@ namespace StatisticsService.API.Controllers
     public class ReportController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
 
-        public ReportController(IMediator mediator, IMapper mapper)
+        public ReportController(IMediator mediator)
         {
             _mediator = mediator;
-            _mapper = mapper;
         }
 
-        [HttpGet("companyReport")]
+        [HttpPost("companyReport")]
         [Authorize, ServiceFilter(typeof(EnsureAuthenticatedUserFilter))]
         public async Task<ActionResult> GetCompanyStatistics([FromBody] GetCompanyStatisticsQuery query)
         {

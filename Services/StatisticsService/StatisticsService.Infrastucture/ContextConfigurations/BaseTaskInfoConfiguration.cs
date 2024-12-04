@@ -16,7 +16,7 @@ namespace StatisticsService.Infrastructure.ContextConfigurations
             builder.HasOne(t => t.ParentTask)
                 .WithMany(t => t.ChildTasks)
                 .HasForeignKey(t => t.ParentId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

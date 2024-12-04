@@ -66,6 +66,7 @@ namespace UnionService
                         ValidAudience = configuration["Jwt:Audience"]
                     };
                 });
+
             services.AddAuthorization();
 
             services.AddDbContext<ApplicationContext>(opts =>

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using UnionService.Domain.Interfaces;
 
 namespace UnionService.Application.UseCases
@@ -27,8 +28,8 @@ namespace UnionService.Application.UseCases
 
             existingCompany.Name = request.Name ?? existingCompany.Name;
             existingCompany.Description = request.Description ?? existingCompany.Description;
-            existingCompany.LogoContentType = request.LogoContentType ?? existingCompany.LogoContentType;
-            existingCompany.LogoData = request.LogoData ?? existingCompany.LogoData;
+            existingCompany.LogoContentType = request.ImageFile?.ContentType ?? existingCompany.LogoContentType;
+            existingCompany.LogoData = ConvertToByteArray(request.ImageFile) ?? existingCompany.LogoData;
 
             _unitOfWork.Companies.Update(existingCompany);
 
@@ -37,5 +38,14 @@ namespace UnionService.Application.UseCases
             return Unit.Value;
         }
 
+        private byte[]? ConvertToByteArray(IFormFile? file)
+        {
+            if (file is null)
+                return null;
+
+            using var memoryStream = new MemoryStream();
+            file.CopyTo(memoryStream);
+            return memoryStream.ToArray();
+        }
     }
 }

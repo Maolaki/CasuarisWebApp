@@ -58,10 +58,11 @@ public class AddTaskHandler : IRequestHandler<AddTaskCommand, Unit>
 
         _unitOfWork.TasksInfo.Create(newTask);
 
+        await _unitOfWork.SaveAsync();
+
         var taskData = new BaseTaskData
         {
-            InfoId = newTask.Id,
-            Resources = new List<Resource>()
+            InfoId = newTask.Id
         };
 
         _unitOfWork.TasksData.Create(taskData);

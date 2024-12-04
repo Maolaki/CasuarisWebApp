@@ -12,8 +12,8 @@ using UnionService.Infrastructure.Context;
 namespace UnionService.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20241202192904_Ver1")]
-    partial class Ver1
+    [Migration("20241204200953_Ver2")]
+    partial class Ver2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,6 +56,21 @@ namespace UnionService.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("CompaniesManagers");
+                });
+
+            modelBuilder.Entity("CompanyOwners", b =>
+                {
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CompanyId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CompanyOwners");
                 });
 
             modelBuilder.Entity("TeamsMembers", b =>
@@ -136,7 +151,7 @@ namespace UnionService.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ParentId")
+                    b.Property<int?>("ParentId")
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -217,7 +232,7 @@ namespace UnionService.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TeamId")
+                    b.Property<int?>("TeamId")
                         .HasColumnType("int");
 
                     b.Property<int>("Type")
@@ -358,9 +373,6 @@ namespace UnionService.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(450)");
 
@@ -437,6 +449,21 @@ namespace UnionService.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("CompanyOwners", b =>
+                {
+                    b.HasOne("UnionService.Domain.Entities.Company", null)
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("UnionService.Domain.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TeamsMembers", b =>
                 {
                     b.HasOne("UnionService.Domain.Entities.Team", null)
@@ -485,8 +512,7 @@ namespace UnionService.Infrastructure.Migrations
                     b.HasOne("UnionService.Domain.Entities.BaseTaskInfo", "ParentTask")
                         .WithMany("ChildTasks")
                         .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Company");
 
@@ -515,8 +541,7 @@ namespace UnionService.Infrastructure.Migrations
                     b.HasOne("UnionService.Domain.Entities.Team", "Team")
                         .WithMany()
                         .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("UnionService.Domain.Entities.User", "User")
                         .WithMany()

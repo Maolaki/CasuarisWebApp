@@ -41,6 +41,7 @@ namespace TaskService.Application.UseCases
 
             var newResource = new Resource
             {
+                BaseTaskDataId = existingTaskData.Id,
                 Type = request.Type,
                 ContentType = request.Type == ResourceType.image || request.Type == ResourceType.video ? request.ContentType : null,
                 Data = request.Type == ResourceType.text ? request.ResourceData : null,

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace UnionService.Application.UseCases
 {
@@ -7,6 +8,6 @@ namespace UnionService.Application.UseCases
         int CompanyId,
         string? Name,
         string? Description,
-        string? LogoContentType,
-        byte[]? LogoData) : IRequest<Unit>;
+        IFormFile? ImageFile
+        ) : IRequest<Unit>;
 }

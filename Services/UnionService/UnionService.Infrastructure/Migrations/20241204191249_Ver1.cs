@@ -33,7 +33,6 @@ namespace UnionService.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CompanyId = table.Column<int>(type: "int", nullable: false),
                     Username = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     HashedPassword = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -154,6 +153,30 @@ namespace UnionService.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CompaniesManagers_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CompanyOwners",
+                columns: table => new
+                {
+                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompanyOwners", x => new { x.CompanyId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_CompanyOwners_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CompanyOwners_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -388,6 +411,11 @@ namespace UnionService.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CompanyOwners_UserId",
+                table: "CompanyOwners",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DateTimeCheckers_CompanyId",
                 table: "DateTimeCheckers",
                 column: "CompanyId");
@@ -465,6 +493,9 @@ namespace UnionService.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "CompaniesManagers");
+
+            migrationBuilder.DropTable(
+                name: "CompanyOwners");
 
             migrationBuilder.DropTable(
                 name: "DateTimeCheckers");

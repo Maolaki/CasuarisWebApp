@@ -1,3 +1,4 @@
+using QuestPDF.Infrastructure;
 using StatisticsService.API.Middlewares;
 
 namespace StatisticsService
@@ -30,6 +31,8 @@ namespace StatisticsService
 
             app.UseHttpsRedirection();
             app.MapControllers();
+
+            QuestPDF.Settings.License = LicenseType.Community;
 
             app.Run();
         }
