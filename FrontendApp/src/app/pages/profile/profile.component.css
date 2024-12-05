@@ -1,0 +1,56 @@
+.profile-container {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  gap: 20px;
+  padding: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin-left: 0; /* Убедитесь, что нет сдвига при скрытой панели */
+}
+
+.grid-item {
+  background-color: var(--primary-color);
+  padding: 20px;
+}
+
+  .grid-item.main {
+    background-color: var(--secondary-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--third-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 5px;
+}
+
+.row {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--fourth-color);
+  border-radius: 5px;
+  text-align: center;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .profile-container {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-item.main {
+    width: 100%;
+  }
+}
