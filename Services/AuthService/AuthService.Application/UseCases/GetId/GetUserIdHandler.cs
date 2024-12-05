@@ -15,7 +15,7 @@ namespace AuthService.Application.UseCases
 
         public async Task<long> Handle(GetUserIdQuery request, CancellationToken cancellationToken)
         {
-            var username = request.ClaimsPrincipalIdentity.Identity?.Name;
+            var username = request.claimsPrincipalIdentity.Identity?.Name;
             if (username == null)
             {
                 throw new NotFoundException("Wrong username");

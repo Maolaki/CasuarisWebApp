@@ -1,4 +1,5 @@
-﻿using TaskService.Domain.Enums;
+﻿using Microsoft.AspNetCore.Http;
+using TaskService.Domain.Enums;
 
 namespace TaskService.Application.DTOs
 {
@@ -6,8 +7,7 @@ namespace TaskService.Application.DTOs
     {
         public int Id { get; set; }
         public string? Data { get; set; }
-        byte[]? DataBytes { get; set; }
-        public string? ContentType { get; set; }
+        public IFormFile? ImageFile { get; set; }
         public ResourceType Type { get; set; }
     }
 }

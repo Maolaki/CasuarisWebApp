@@ -18,16 +18,16 @@ namespace UnionService.Application.UseCases
         {
             var company = new Company
             {
-                Name = request.Name,
-                Description = request.Description,
-                LogoContentType = request.ImageFile?.ContentType,
-                LogoData = ConvertToByteArray(request.ImageFile)
+                Name = request.name,
+                Description = request.description,
+                LogoContentType = request.imageFile?.ContentType,
+                LogoData = ConvertToByteArray(request.imageFile)
             };
 
-            var user = await _unitOfWork.Users.GetAsync(u => u.Id == request.UserId);
+            var user = await _unitOfWork.Users.GetAsync(u => u.Id == request.userId);
             if (user == null)
             {
-                throw new ArgumentException($"User with Id {request.UserId} does not exist.");
+                throw new ArgumentException($"User with Id {request.userId} does not exist.");
             }
 
             _unitOfWork.Companies.Create(company);

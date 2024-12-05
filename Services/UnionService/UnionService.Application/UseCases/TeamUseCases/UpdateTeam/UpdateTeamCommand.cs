@@ -3,10 +3,10 @@
 namespace UnionService.Application.UseCases
 {
     public record UpdateTeamCommand(
-        string username,
-        int CompanyId,
-        int TeamId,
-        string? Name,
-        string? Description
+        string? username,
+        int? companyId,
+        int? teamId,
+        string? name,
+        string? description
         ) : IRequest<Unit>;
 }

@@ -42,7 +42,7 @@ namespace UnionService.API.Controllers
             return Ok();
         }
 
-        [HttpGet("getTeams")]
+        [HttpPost("getTeams")]
         [Authorize, ServiceFilter(typeof(EnsureAuthenticatedUserFilter))]
         public async Task<IActionResult> GetTeams([FromQuery] GetTeamsQuery query)
         {

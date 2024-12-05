@@ -20,10 +20,16 @@ namespace UnionService.Application.UseCases
 
         public async Task<IEnumerable<TeamDTO>> Handle(GetTeamsQuery request, CancellationToken cancellationToken)
         {
-            var hasManagerAccess = await _accessService.CheckManagerAccessAsync(request.CompanyId, request.username);
+            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.companyId);
+            if (existingCompany == null)
+            {
+                throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
+            }
+
+            var hasManagerAccess = await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!);
 
             var teamsQuery = await _unitOfWork.Teams
-                .GetAllAsync(t => t.CompanyId == request.CompanyId, 1, int.MaxValue);
+                .GetAllAsync(t => t.CompanyId == request.companyId, 1, int.MaxValue);
 
             if (!hasManagerAccess)
             {
@@ -33,8 +39,8 @@ namespace UnionService.Application.UseCases
             var teamDTOs = teamsQuery.Select(team => _mapper.Map<TeamDTO>(team)).ToList();
 
             teamDTOs = teamDTOs
-                .Skip((request.PageNumber - 1) * request.PageSize)
-                .Take(request.PageSize)
+                .Skip((int)((request.pageNumber! - 1) * request.pageSize!))
+                .Take((int)request.pageSize!)
                 .ToList();
 
             return teamDTOs;

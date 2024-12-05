@@ -17,19 +17,19 @@ namespace TaskService.Application.UseCases
 
         public async Task<Unit> Handle(RemoveTaskCommand request, CancellationToken cancellationToken)
         {
-            if (await _accessService.CheckManagerAccessAsync(request.CompanyId, request.username))
-                throw new ArgumentException("User have no permission");
-
-            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.CompanyId);
+            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.companyId);
             if (existingCompany == null)
             {
-                throw new ArgumentException($"Company with Id {request.CompanyId} does not exist.");
+                throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
             }
 
-            var existingTask = await _unitOfWork.TasksInfo.GetAsync(t => t.Id == request.TaskId);
+            if (!await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!))
+                throw new ArgumentException("User have no permission");
+
+            var existingTask = await _unitOfWork.TasksInfo.GetAsync(t => t.Id == request.taskId);
             if (existingTask == null)
             {
-                throw new ArgumentException($"Task with Id {request.TaskId} does not exist.");
+                throw new ArgumentException($"Task with Id {request.taskId} does not exist.");
             }
 
             if (existingCompany.Tasks == null || !existingCompany.Tasks.Contains(existingTask))

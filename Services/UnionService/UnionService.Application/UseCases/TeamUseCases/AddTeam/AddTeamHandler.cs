@@ -17,20 +17,20 @@ namespace UnionService.Application.UseCases
 
         public async Task<Unit> Handle(AddTeamCommand request, CancellationToken cancellationToken)
         {
-            if (await _accessService.CheckManagerAccessAsync(request.CompanyId, request.username))
-                throw new ArgumentException("User have no permission");
-
-            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.CompanyId);
+            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.companyId);
             if (existingCompany == null)
             {
-                throw new ArgumentException($"Company with Id {request.CompanyId} does not exist.");
+                throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
             }
+
+            if (!await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!))
+                throw new ArgumentException("User have no permission");
 
             var team = new Team
             {
-                Name = request.Name,
-                Description = request.Description,
-                CompanyId = request.CompanyId
+                Name = request.name,
+                Description = request.description,
+                CompanyId = (int)request.companyId!
             };
 
             _unitOfWork.Teams.Create(team);

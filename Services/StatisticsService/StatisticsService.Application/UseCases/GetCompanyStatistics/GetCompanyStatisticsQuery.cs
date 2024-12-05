@@ -3,9 +3,9 @@
 namespace StatisticsService.Application.UseCases
 {
     public record GetCompanyStatisticsQuery(
-        string username,
-        int CompanyId,
-        DateTime StartDate,
-        DateTime EndDate
+        string? username,
+        int? companyId,
+        DateTime? startDate,
+        DateTime? endDate
     ) : IRequest<Unit>;
 }

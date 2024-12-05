@@ -16,19 +16,19 @@ namespace UnionService.Application.UseCases
 
         public async Task<Unit> Handle(RemoveCompanyDateTimeCheckerCommand request, CancellationToken cancellationToken)
         {
-            if (await _accessService.CheckOwnerAccessAsync(request.CompanyId, request.username))
-                throw new ArgumentException("User have no permission");
-
-            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.CompanyId);
+            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.companyId);
             if (existingCompany == null)
             {
-                throw new ArgumentException($"Company with Id {request.CompanyId} does not exist.");
+                throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
             }
 
-            var existingDateTimeChecker = existingCompany.DateTimeCheckers!.FirstOrDefault(dtc => dtc.Id == request.DateTimeCheckerId);
+            if (!await _accessService.HaveOwnerAccessAsync(existingCompany.Id, request.username!))
+                throw new ArgumentException("User have no permission");
+
+            var existingDateTimeChecker = existingCompany.DateTimeCheckers!.FirstOrDefault(dtc => dtc.Id == request.dateTimeCheckerId);
             if (existingDateTimeChecker == null)
             {
-                throw new ArgumentException($"DateTimeChecker with Id {request.DateTimeCheckerId} does not exist.");
+                throw new ArgumentException($"DateTimeChecker with Id {request.dateTimeCheckerId} does not exist.");
             }
 
             _unitOfWork.DateTimeCheckers.Delete(existingDateTimeChecker);

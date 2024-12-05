@@ -17,25 +17,25 @@ namespace UnionService.Application.UseCases
 
         public async Task<Unit> Handle(AddAccessPerformerCommand request, CancellationToken cancellationToken)
         {
-            if (await _accessService.CheckManagerAccessAsync(request.CompanyId, request.username))
-                throw new ArgumentException("User have no permission");
-
-            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.CompanyId);
+            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.companyId);
             if (existingCompany == null)
             {
-                throw new ArgumentException($"Company with Id {request.CompanyId} does not exist.");
+                throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
             }
 
-            var existingAccess = existingCompany.Accesses?.FirstOrDefault(a => a.Id == request.AccessId);
+            if (!await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!))
+                throw new ArgumentException("User have no permission");
+
+            var existingAccess = existingCompany.Accesses?.FirstOrDefault(a => a.Id == request.accessId);
             if (existingAccess == null)
             {
-                throw new ArgumentException($"Access with Id {request.AccessId} does not exist.");
+                throw new ArgumentException($"Access with Id {request.accessId} does not exist.");
             }
 
-            var existingUser = await _unitOfWork.Users.GetAsync(u => u.Id == request.UserId);
+            var existingUser = await _unitOfWork.Users.GetAsync(u => u.Id == request.userId);
             if (existingUser == null)
             {
-                throw new ArgumentException($"User with Id {request.UserId} does not exist.");
+                throw new ArgumentException($"User with Id {request.userId} does not exist.");
             }
 
             if (existingAccess.Performers == null)
@@ -43,14 +43,14 @@ namespace UnionService.Application.UseCases
                 existingAccess.Performers = new List<User>();
             }
 
-            if (!existingAccess.Performers.Any(p => p.Id == request.UserId))
+            if (!existingAccess.Performers.Any(p => p.Id == request.userId))
             {
                 existingAccess.Performers.Add(existingUser);
                 await _unitOfWork.SaveAsync();
             }
             else
             {
-                throw new ArgumentException($"User with Id {request.UserId} is already a performer for Access with Id {request.AccessId}.");
+                throw new ArgumentException($"User with Id {request.userId} is already a performer for Access with Id {request.accessId}.");
             }
 
             return Unit.Value;

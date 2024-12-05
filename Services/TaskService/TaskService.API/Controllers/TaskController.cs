@@ -54,9 +54,9 @@ namespace TaskService.API.Controllers
             return Ok();
         }
 
-        [HttpGet("all")]
+        [HttpPost("all")]
         [Authorize, ServiceFilter(typeof(EnsureAuthenticatedUserFilter))]
-        public async Task<ActionResult<IEnumerable<TaskInfoDTO>>> GetAllTasksInfo([FromQuery] GetAllTasksInfoQuery query)
+        public async Task<ActionResult<IEnumerable<TaskInfoDTO>>> GetAllTasksInfo([FromBody] GetAllTasksInfoQuery query)
         {
             if (User.Identity!.Name != query.username)
                 return BadRequest("User is not authenticated.");
@@ -65,9 +65,9 @@ namespace TaskService.API.Controllers
             return Ok(tasks);
         }
 
-        [HttpGet("data")]
+        [HttpPost("data")]
         [Authorize, ServiceFilter(typeof(EnsureAuthenticatedUserFilter))]
-        public async Task<ActionResult<TaskDataDTO>> GetTaskData([FromQuery] GetTaskDataQuery query)
+        public async Task<ActionResult<TaskDataDTO>> GetTaskData([FromBody] GetTaskDataQuery query)
         {
             if (User.Identity!.Name != query.username)
                 return BadRequest("User is not authenticated.");

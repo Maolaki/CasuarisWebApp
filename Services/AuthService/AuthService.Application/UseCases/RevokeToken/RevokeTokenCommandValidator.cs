@@ -6,11 +6,11 @@ namespace AuthService.Application.UseCases
     {
         public RevokeTokenCommandValidator()
         {
-            RuleFor(x => x.RefreshToken)
+            RuleFor(x => x.refreshToken)
                 .NotEmpty()
                 .WithMessage("RefreshToken cannot be null or empty.");
 
-            RuleFor(x => x.User)
+            RuleFor(x => x.user)
                 .NotNull()
                 .WithMessage("User cannot be null.");
         }

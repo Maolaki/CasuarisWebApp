@@ -9,11 +9,11 @@ namespace UnionService.Application.UseCases
             RuleFor(x => x.username)
                 .NotEmpty().WithMessage("Username should not be empty.");
 
-            RuleFor(x => x.CompanyId)
-                .GreaterThan(0).WithMessage("CompanyId must be greater than 0.");
-
-            RuleFor(x => x.InvitationId)
+            RuleFor(x => x.invitationId)
                 .GreaterThan(0).WithMessage("InvitationId must be greater than 0.");
+
+            RuleFor(x => x.answer)
+                .NotNull().WithMessage("Answer should not be null.");
         }
     }
 }

@@ -6,19 +6,20 @@ namespace UnionService.Application.UseCases
     {
         public AddCompanyCommandValidator()
         {
-            RuleFor(x => x.UserId)
+            RuleFor(x => x.userId)
                 .GreaterThan(0).WithMessage("UserId must be greater than 0.");
 
-            RuleFor(x => x.Name)
+            RuleFor(x => x.name)
                 .NotEmpty().WithMessage("Name is required.")
                 .MinimumLength(5).WithMessage("Name must have minimum 5 characters.")
                 .MaximumLength(100).WithMessage("Name must not exceed 100 characters.");
 
-            RuleFor(x => x.Description)
+            RuleFor(x => x.description)
+                .NotNull().WithMessage("Description is required.")
                 .MaximumLength(500).WithMessage("Description must not exceed 500 characters.")
-                .When(x => !string.IsNullOrEmpty(x.Description));
+                .When(x => !string.IsNullOrEmpty(x.description));
 
-            RuleFor(x => x.ImageFile)
+            RuleFor(x => x.imageFile)
                 .Must(file => file == null || file.Length <= 5000000)
                 .WithMessage("If provided, image size must not exceed 5 MB.")
                 .Must(file => file == null ||

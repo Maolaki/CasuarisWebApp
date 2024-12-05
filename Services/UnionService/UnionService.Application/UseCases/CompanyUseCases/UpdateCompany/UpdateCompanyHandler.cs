@@ -17,19 +17,19 @@ namespace UnionService.Application.UseCases
 
         public async Task<Unit> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
         {
-            if (await _accessService.CheckOwnerAccessAsync(request.CompanyId, request.username))
-                throw new ArgumentException("User have no permission");
-
-            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.CompanyId);
+            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.companyId);
             if (existingCompany == null)
             {
-                throw new ArgumentException($"Company with Id {request.CompanyId} does not exist.");
+                throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
             }
 
-            existingCompany.Name = request.Name ?? existingCompany.Name;
-            existingCompany.Description = request.Description ?? existingCompany.Description;
-            existingCompany.LogoContentType = request.ImageFile?.ContentType ?? existingCompany.LogoContentType;
-            existingCompany.LogoData = ConvertToByteArray(request.ImageFile) ?? existingCompany.LogoData;
+            if (!await _accessService.HaveOwnerAccessAsync(existingCompany.Id, request.username!))
+                throw new ArgumentException("User have no permission");
+
+            existingCompany.Name = request.name ?? existingCompany.Name;
+            existingCompany.Description = request.description ?? existingCompany.Description;
+            existingCompany.LogoContentType = request.imageFile?.ContentType ?? existingCompany.LogoContentType;
+            existingCompany.LogoData = ConvertToByteArray(request.imageFile) ?? existingCompany.LogoData;
 
             _unitOfWork.Companies.Update(existingCompany);
 

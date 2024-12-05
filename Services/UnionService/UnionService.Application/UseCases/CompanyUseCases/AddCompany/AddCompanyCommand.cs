@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Http;
 namespace UnionService.Application.UseCases
 {
     public record AddCompanyCommand(
-        int UserId,
-        string? Name,
-        string? Description,
-        IFormFile? ImageFile
+        int? userId,
+        string? name,
+        string? description,
+        IFormFile? imageFile
     ) : IRequest<Unit>;
 }

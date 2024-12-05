@@ -24,26 +24,29 @@ namespace StatisticsService.Application.UseCases
 
         public async Task<MediatR.Unit> Handle(GetCompanyStatisticsQuery request, CancellationToken cancellationToken)
         {
-            if (await _accessService.CheckOwnerAccessAsync(request.CompanyId, request.username))
-                throw new ArgumentException("User have no permission");
+            var startDate = (DateTime)request.startDate!;
+            var endDate = (DateTime)request.endDate!;
 
             var existingUser = await _unitOfWork.Users.GetAsync(u => u.Username == request.username);
             if (existingUser == null)
                 throw new ArgumentException($"User with username {request.username} does not exist.");
 
-            var company = await _unitOfWork.Companies.GetAsync(c => c.Id == request.CompanyId);
-            if (company == null)
-                throw new ArgumentException($"Company with Id {request.CompanyId} does not exist.");
+            var existingCompany = await _unitOfWork.Companies.GetAsync(c => c.Id == request.companyId);
+            if (existingCompany == null)
+                throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
+
+            if (!await _accessService.HaveOwnerAccessAsync(existingCompany.Id, request.username!))
+                throw new ArgumentException("User have no permission");
 
             var performers = await _unitOfWork.Performers.GetAllAsync(p =>
-                p.CompanyId == request.CompanyId &&
-                p.JoinDate >= request.StartDate &&
-                p.JoinDate <= request.EndDate, 1, int.MaxValue);
+                p.CompanyId == request.companyId &&
+                p.JoinDate >= startDate &&
+                p.JoinDate <= endDate, 1, int.MaxValue);
 
             decimal totalSalaryCosts = 0;
             foreach (var performer in performers)
             {
-                var fullPeriod = request.EndDate - request.StartDate;
+                var fullPeriod = (TimeSpan)(request.endDate! - request.startDate!);
                 var fullHours = fullPeriod.Days / 7 * performer.WorkDays * performer.WorkHours;
 
                 var salaryForPeriod = performer.Salary * (decimal)fullHours;
@@ -51,10 +54,10 @@ namespace StatisticsService.Application.UseCases
                 totalSalaryCosts += salaryForPeriod;
             }
 
-            var tasks = await _unitOfWork.TasksInfo.GetAllAsync(t => t.CompanyId == request.CompanyId
+            var tasks = await _unitOfWork.TasksInfo.GetAllAsync(t => t.CompanyId == request.companyId
                 && t.CompleteDate.HasValue
-                && t.CompleteDate.Value >= DateOnly.FromDateTime(request.StartDate.Date)
-                && t.CompleteDate.Value <= DateOnly.FromDateTime(request.EndDate.Date)
+                && t.CompleteDate.Value >= DateOnly.FromDateTime(startDate.Date)
+                && t.CompleteDate.Value <= DateOnly.FromDateTime(endDate.Date)
                 && t.Status == Domain.Enums.TaskStatus.done, 1, int.MaxValue);
 
             var completedTaskCount = tasks.Count();
@@ -63,7 +66,7 @@ namespace StatisticsService.Application.UseCases
             var profitOrLoss = totalTaskBudget - totalSalaryCosts;
 
             using var pdfStream = new MemoryStream();
-            GeneratePdf(pdfStream, company, performers, tasks, totalSalaryCosts, completedTaskCount, totalTaskBudget, profitOrLoss, request.StartDate, request.EndDate);
+            GeneratePdf(pdfStream, existingCompany, performers, tasks, totalSalaryCosts, completedTaskCount, totalTaskBudget, profitOrLoss, startDate, endDate);
 
             var emailBody = new StringBuilder()
                 .AppendLine("Please find attached the requested company statistics report.")

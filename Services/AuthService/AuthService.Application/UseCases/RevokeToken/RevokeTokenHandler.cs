@@ -14,9 +14,9 @@ namespace AuthService.Application.UseCases
 
         public async Task<Unit> Handle(RevokeTokenCommand request, CancellationToken cancellationToken)
         {
-            var username = request.User.Identity?.Name!;
+            var username = request.user!.Identity?.Name!;
 
-            var refToken = await _unitOfWork.RefreshTokens.GetAsync(t => t.Token == request.RefreshToken && t.User!.Username == username);
+            var refToken = await _unitOfWork.RefreshTokens.GetAsync(t => t.Token == request.refreshToken && t.User!.Username == username);
 
             if (refToken == null)
                 throw new ArgumentException("Wrong refreshToken or/and username");

@@ -3,5 +3,5 @@ using System.Security.Claims;
 
 namespace AuthService.Application.UseCases
 {
-    public record RevokeAllTokensCommand(ClaimsPrincipal User) : IRequest<Unit>;
+    public record RevokeAllTokensCommand(ClaimsPrincipal? user) : IRequest<Unit>;
 }

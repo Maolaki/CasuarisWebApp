@@ -25,9 +25,9 @@ namespace AuthService.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] AuthenticateUserQuery loginDto)
+        public async Task<IActionResult> Login([FromBody] AuthenticateUserQuery query)
         {
-            var response = await _mediator.Send(loginDto);
+            var response = await _mediator.Send(query);
             return Ok(response);
         }
 

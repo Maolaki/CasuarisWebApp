@@ -16,12 +16,12 @@ namespace UnionService.Application.UseCases
 
         public async Task<Unit> Handle(RemoveCompanyCommand request, CancellationToken cancellationToken)
         {
-            if (await _accessService.CheckOwnerAccessAsync(request.CompanyId, request.username))
-                throw new ArgumentException("User have no permission");
-
-            var existingCompany = await _unitOfWork.Companies.GetAsync(c => c.Id == request.CompanyId);
+            var existingCompany = await _unitOfWork.Companies.GetAsync(c => c.Id == request.companyId);
             if (existingCompany == null)
-                throw new ArgumentException($"Company with Id {request.CompanyId} does not exist.");
+                throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
+
+            if (!await _accessService.HaveOwnerAccessAsync(existingCompany.Id, request.username!))
+                throw new ArgumentException("User have no permission");
 
             _unitOfWork.Companies.Delete(existingCompany);
             await _unitOfWork.SaveAsync();

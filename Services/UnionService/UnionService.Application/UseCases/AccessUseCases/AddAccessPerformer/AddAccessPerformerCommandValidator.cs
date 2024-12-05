@@ -9,14 +9,17 @@ namespace UnionService.Application.UseCases
             RuleFor(x => x.username)
                 .NotEmpty().WithMessage("Username should not be empty.");
 
-            RuleFor(x => x.CompanyId)
+            RuleFor(x => x.companyId)
+                .NotNull().WithMessage("CompanyId cannot be null.")
                 .GreaterThan(0).WithMessage("CompanyId must be greater than 0.");
 
-            RuleFor(command => command.AccessId)
+            RuleFor(x => x.accessId)
+                .NotNull().WithMessage("AccessId cannot be null.")
                 .GreaterThan(0)
                 .WithMessage("AccessId must be a positive integer.");
 
-            RuleFor(command => command.UserId)
+            RuleFor(x => x.userId)
+                .NotNull().WithMessage("UserId cannot be null.")
                 .GreaterThan(0)
                 .WithMessage("UserId must be a positive integer.");
         }

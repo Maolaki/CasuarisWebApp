@@ -10,26 +10,22 @@ namespace TaskService.Application.UseCases
             RuleFor(x => x.username)
                 .NotEmpty().WithMessage("Username should not be empty.");
 
-            RuleFor(x => x.CompanyId)
+            RuleFor(x => x.companyId)
                 .GreaterThan(0).WithMessage("CompanyId must be greater than 0.");
 
-            RuleFor(x => x.ResourceId)
+            RuleFor(x => x.resourceId)
                 .GreaterThan(0).WithMessage("ResourceId must be greater than 0.");
 
-            RuleFor(x => x.Type)
+            RuleFor(x => x.type)
                 .IsInEnum().WithMessage("Invalid Resource Type.");
 
-            RuleFor(x => x.ContentType)
-                .NotNull().WithMessage("Content type must not by empty.")
-                .When(x => x.Type == ResourceType.image || x.Type == ResourceType.video);
-
-            RuleFor(x => x.Data)
+            RuleFor(x => x.data)
                 .NotEmpty().WithMessage("Data must be provided for text resource.")
-                .When(x => x.Type == ResourceType.text);
+                .When(x => x.type == ResourceType.text);
 
-            RuleFor(x => x.DataBytes)
-                .NotNull().WithMessage("DataBytes must be provided for image or video resource.")
-                .When(x => x.Type == ResourceType.image || x.Type == ResourceType.video);
+            RuleFor(x => x.imageFile)
+                .NotEmpty().WithMessage("ImageFile should not be empty.")
+                .When(x => x.type == ResourceType.image || x.type == ResourceType.video);
         }
     }
 }

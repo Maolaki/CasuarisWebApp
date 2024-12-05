@@ -9,8 +9,7 @@ public class GetAllTasksInfoQueryValidator : AbstractValidator<GetAllTasksInfoQu
             .NotEmpty()
             .WithMessage("Username cannot be empty.");
 
-        RuleFor(query => query.CompanyId)
-            .GreaterThan(0)
-            .WithMessage("CompanyId must be greater than 0.");
+        RuleFor(query => query.companyId)
+            .GreaterThan(0).WithMessage("CompanyId must be greater than 0.");
     }
 }

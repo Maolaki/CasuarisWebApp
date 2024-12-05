@@ -16,43 +16,43 @@ namespace TaskService.Application.UseCases
 
         public async Task<Unit> Handle(ChangeResourcePositionCommand request, CancellationToken cancellationToken)
         {
-            if (await _accessService.CheckManagerAccessAsync(request.CompanyId, request.username))
-                throw new ArgumentException("User have no permission");
-
-            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.CompanyId);
+            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.companyId);
             if (existingCompany == null)
             {
-                throw new ArgumentException($"Company with Id {request.CompanyId} does not exist.");
+                throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
             }
 
-            var existingTaskInfo = existingCompany.Tasks?.FirstOrDefault(td => td.Id == request.TaskInfoId);
+            if (!await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!))
+                throw new ArgumentException("User have no permission");
+
+            var existingTaskInfo = existingCompany.Tasks?.FirstOrDefault(td => td.Id == request.taskInfoId);
             if (existingTaskInfo == null)
             {
-                throw new ArgumentException($"Task with Id {request.TaskInfoId} does not exist.");
+                throw new ArgumentException($"Task with Id {request.taskInfoId} does not exist.");
             }
 
             var existingTaskData = existingTaskInfo.Data;
             if (existingTaskData == null)
             {
-                throw new ArgumentException($"Task with Id {request.TaskInfoId} don't have data.");
+                throw new ArgumentException($"Task with Id {request.taskInfoId} don't have data.");
             }
 
-            var existingResource = existingTaskData.Resources?.FirstOrDefault(r => r.Id == request.ResourceId);
+            var existingResource = existingTaskData.Resources?.FirstOrDefault(r => r.Id == request.resourceId);
             if (existingResource == null)
             {
-                throw new ArgumentException($"Resource with Id {request.ResourceId} does not exist in Data of TaskInfo {request.TaskInfoId}.");
+                throw new ArgumentException($"Resource with Id {request.resourceId} does not exist in Data of TaskInfo {request.taskInfoId}.");
             }
 
-            if (request.NewPosition >= existingTaskData.Resources!.Count)
+            if (request.newPosition >= existingTaskData.Resources!.Count)
             {
-                throw new ArgumentException($"New position {request.NewPosition} is out of bounds.");
+                throw new ArgumentException($"New position {request.newPosition} is out of bounds.");
             }
 
             var resourceList = existingTaskData.Resources.ToList();
 
             resourceList.Remove(existingResource);
 
-            resourceList.Insert(request.NewPosition, existingResource);
+            resourceList.Insert((int)request.newPosition!, existingResource);
 
             existingTaskData.Resources = resourceList;
 

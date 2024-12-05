@@ -2,8 +2,8 @@
 {
     public enum DateTimeCheckerType
     {
-        Turnstile,
-        TimeClocks,
-        RFIDReader
+        turnstile,
+        timeclocks,
+        rfidreader
     }
 }

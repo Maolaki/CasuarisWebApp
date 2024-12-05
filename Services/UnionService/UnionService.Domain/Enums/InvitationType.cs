@@ -2,7 +2,7 @@
 {
     public enum InvitationType
     {
-        Company,
-        Team
+        company,
+        team
     }
 }

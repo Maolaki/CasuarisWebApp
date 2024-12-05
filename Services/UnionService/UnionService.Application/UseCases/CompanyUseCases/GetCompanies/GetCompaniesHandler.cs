@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using UnionService.Application.DTOs;
 using UnionService.Domain.Interfaces;
-using System.Linq;
 using AutoMapper;
 
 namespace UnionService.Application.UseCases
@@ -36,8 +35,8 @@ namespace UnionService.Application.UseCases
             var companyDTOs = companies.Select(company => _mapper.Map<CompanyDTO>(company)).ToList();
 
             companyDTOs = companyDTOs
-                .Skip((request.PageNumber - 1) * request.PageSize)
-                .Take(request.PageSize)
+                .Skip((int)((request.pageNumber! - 1) * request.pageSize!))
+                .Take((int)request.pageSize!)
                 .ToList();
 
             return companyDTOs;

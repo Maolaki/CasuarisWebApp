@@ -1,11 +1,12 @@
-﻿namespace UnionService.Application.DTOs
+﻿using Microsoft.AspNetCore.Http;
+
+namespace UnionService.Application.DTOs
 {
     public class CompanyDTO
     {
         int Id { get; set; }
         string? Name { get; set; }
         string? Description { get; set; }
-        string? LogoContentType { get; set; }
-        byte[]? LogoData { get; set; }
+        public IFormFile? LogoFile { get; set; }
     }
 }

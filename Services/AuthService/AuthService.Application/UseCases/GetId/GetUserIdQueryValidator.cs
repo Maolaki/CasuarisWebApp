@@ -6,7 +6,7 @@ namespace AuthService.Application.UseCases
     {
         public GetUserIdQueryValidator()
         {
-            RuleFor(x => x.ClaimsPrincipalIdentity)
+            RuleFor(x => x.claimsPrincipalIdentity)
                 .NotNull()
                 .WithMessage("ClaimsPrincipalIdentity cannot be null.");
         }

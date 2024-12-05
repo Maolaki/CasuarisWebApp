@@ -17,13 +17,13 @@ namespace AuthService.Application.UseCases
 
         public async Task<string> Handle(RefreshTokensCommand request, CancellationToken cancellationToken)
         {
-            var principal = _tokenService.GetPrincipalFromExpiredToken(request.AccessToken!);
+            var principal = _tokenService.GetPrincipalFromExpiredToken(request.accessToken!);
             var username = principal?.Identity?.Name;
 
             if (username == null || principal == null)
                 throw new ArgumentException("Wrong jwt or/and username");
 
-            var refToken = await _unitOfWork.RefreshTokens.GetAsync(t => t.Token == request.RefreshToken && t.User!.Username == username);
+            var refToken = await _unitOfWork.RefreshTokens.GetAsync(t => t.Token == request.refreshToken && t.User!.Username == username);
             if (refToken == null || refToken.RefreshTokenExpiryTime <= DateTime.Now)
                 throw new ArgumentException("Wrong refreshToken");
 

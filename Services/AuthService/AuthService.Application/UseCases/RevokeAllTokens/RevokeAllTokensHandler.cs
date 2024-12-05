@@ -15,7 +15,7 @@ namespace AuthService.Application.UseCases
 
         public async Task<Unit> Handle(RevokeAllTokensCommand request, CancellationToken cancellationToken)
         {
-            var username = request.User.Identity?.Name!;
+            var username = request.user!.Identity?.Name!;
             if (username == null)
             {
                 throw new NotFoundException("Wrong username");

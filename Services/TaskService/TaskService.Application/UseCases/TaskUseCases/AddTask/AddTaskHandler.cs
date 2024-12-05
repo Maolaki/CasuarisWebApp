@@ -16,30 +16,30 @@ public class AddTaskHandler : IRequestHandler<AddTaskCommand, Unit>
 
     public async Task<Unit> Handle(AddTaskCommand request, CancellationToken cancellationToken)
     {
-        if (await _accessService.CheckManagerAccessAsync(request.CompanyId, request.username))
-            throw new ArgumentException("User have no permission");
-
-        var existingCompany = await _unitOfWork.Companies.GetAsync(c => c.Id == request.CompanyId);
+        var existingCompany = await _unitOfWork.Companies.GetAsync(c => c.Id == request.companyId);
         if (existingCompany == null)
         {
-            throw new ArgumentException($"Company with Id {request.CompanyId} does not exist.");
+            throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
         }
 
+        if (!await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!))
+            throw new ArgumentException("User have no permission");
+
         BaseTaskInfo? parentTask = null;
-        if (request.ParentId.HasValue)
+        if (request.parentId.HasValue)
         {
-            parentTask = await _unitOfWork.TasksInfo.GetAsync(t => t.Id == request.ParentId);
+            parentTask = await _unitOfWork.TasksInfo.GetAsync(t => t.Id == request.parentId);
             if (parentTask == null)
             {
-                throw new ArgumentException($"Parent task with Id {request.ParentId} does not exist.");
+                throw new ArgumentException($"Parent task with Id {request.parentId} does not exist.");
             }
             if (parentTask.Company != existingCompany)
             {
-                throw new ArgumentException($"Parent task with Id {request.ParentId} is not from Company with Id {request.CompanyId}.");
+                throw new ArgumentException($"Parent task with Id {request.parentId} is not from Company with Id {request.companyId}.");
             }
 
             var childBudgets = parentTask.ChildTasks?.Sum(ct => ct.Budget) ?? 0;
-            if (childBudgets + request.Budget > parentTask.Budget)
+            if (childBudgets + request.budget > parentTask.Budget)
             {
                 throw new InvalidOperationException($"The total budget for the task '{parentTask.Name}' exceeds the allocated amount.");
             }
@@ -47,11 +47,11 @@ public class AddTaskHandler : IRequestHandler<AddTaskCommand, Unit>
 
         var newTask = new BaseTaskInfo
         {
-            Name = request.Name,
-            Description = request.Description,
-            CompanyId = request.CompanyId,
+            Name = request.name,
+            Description = request.description,
+            CompanyId = (int)request.companyId!,
             ParentTask = parentTask,
-            Budget = request.Budget,
+            Budget = (decimal)request.budget!,
             Status = TaskService.Domain.Enums.TaskStatus.todo,
             CompleteDate = null,
         };
@@ -78,6 +78,14 @@ public class AddTaskHandler : IRequestHandler<AddTaskCommand, Unit>
         }
 
         await _unitOfWork.SaveAsync();
+
+        var newAccess = new Access
+        {
+            CompanyId = existingCompany.Id,
+            TaskId = newTask.Id
+        };
+
+        _unitOfWork.Accesses.Create(newAccess);
 
         return Unit.Value;
     }

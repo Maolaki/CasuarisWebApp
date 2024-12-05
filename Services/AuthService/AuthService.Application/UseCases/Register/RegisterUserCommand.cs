@@ -3,8 +3,8 @@
 namespace AuthService.Application.UseCases
 {
     public record RegisterUserCommand(
-        string? Username,
-        string? Email,
-        string? Password
+        string? username,
+        string? email,
+        string? password
     ) : IRequest<Unit>;
 }

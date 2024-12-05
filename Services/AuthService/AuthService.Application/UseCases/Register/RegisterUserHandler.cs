@@ -18,7 +18,7 @@ namespace AuthService.Application.UseCases
 
         public async Task<Unit> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            var existingUser = await _unitOfWork.Users.GetAsync(u => u.Email == request.Email || u.Username == request.Username);
+            var existingUser = await _unitOfWork.Users.GetAsync(u => u.Email == request.email || u.Username == request.username);
             if (existingUser != null)
             {
                 throw new DuplicateNameException("Пользователь с таким email или username уже существует.");
@@ -26,9 +26,9 @@ namespace AuthService.Application.UseCases
 
             var newUser = new User
             {
-                Username = request.Username,
-                HashedPassword = _passwordHasher.HashPassword(request.Password!),
-                Email = request.Email,
+                Username = request.username,
+                HashedPassword = _passwordHasher.HashPassword(request.password!),
+                Email = request.email,
             };
 
             _unitOfWork.Users.Create(newUser);

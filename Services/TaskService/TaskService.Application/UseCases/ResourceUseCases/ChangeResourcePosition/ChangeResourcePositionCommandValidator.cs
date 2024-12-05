@@ -7,18 +7,18 @@ namespace TaskService.Application.UseCases
         public ChangeResourcePositionCommandValidator()
         {
             RuleFor(x => x.username)
-                            .NotEmpty().WithMessage("Username should not be empty.");
+                .NotEmpty().WithMessage("Username should not be empty.");
 
-            RuleFor(x => x.CompanyId)
+            RuleFor(x => x.companyId)
                 .GreaterThan(0).WithMessage("CompanyId must be greater than 0.");
 
-            RuleFor(x => x.TaskInfoId)
+            RuleFor(x => x.taskInfoId)
                 .GreaterThan(0).WithMessage("TaskId must be greater than 0.");
 
-            RuleFor(x => x.ResourceId)
+            RuleFor(x => x.resourceId)
                 .GreaterThan(0).WithMessage("ResourceId must be greater than 0.");
 
-            RuleFor(x => x.NewPosition)
+            RuleFor(x => x.newPosition)
                 .GreaterThanOrEqualTo(0).WithMessage("New position must be a valid index.");
         }
     }

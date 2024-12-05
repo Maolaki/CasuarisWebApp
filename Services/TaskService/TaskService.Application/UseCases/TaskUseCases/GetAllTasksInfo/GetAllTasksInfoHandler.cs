@@ -20,26 +20,25 @@ public class GetAllTasksInfoQueryHandler : IRequestHandler<GetAllTasksInfoQuery,
 
     public async Task<IEnumerable<TaskInfoDTO>> Handle(GetAllTasksInfoQuery request, CancellationToken cancellationToken)
     {
-        var company = await _unitOfWork.Companies.GetAsync(c => c.Id == request.CompanyId);
-        if (company == null)
-            throw new ArgumentException($"Company with Id {request.CompanyId} does not exist.");
+        var existingCompany = await _unitOfWork.Companies.GetAsync(c => c.Id == request.companyId);
+        if (existingCompany == null)
+            throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
 
-        bool isManagerAccess = await _accessService.CheckManagerAccessAsync(request.CompanyId, request.username);
+        bool isManagerAccess = await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!);
 
         IEnumerable<BaseTaskInfo> tasks;
 
         if (isManagerAccess)
         {
-            tasks = company.Tasks ?? Enumerable.Empty<BaseTaskInfo>();
+            tasks = existingCompany.Tasks!;
         }
         else
         {
-            tasks = company.Accesses?
+            tasks = existingCompany.Accesses?
                 .Where(a => a.Performers?.Any(p => p.Username == request.username) == true)
                 .SelectMany(a => a.Company!.Tasks?
                     .Where(t => t.Id == a.TaskId && t.ParentId == 0) ?? Enumerable.Empty<BaseTaskInfo>())
                 .ToList() ?? new List<BaseTaskInfo>();
-
         }
 
         return _mapper.Map<IEnumerable<TaskInfoDTO>>(tasks);

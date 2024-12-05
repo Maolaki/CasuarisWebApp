@@ -21,9 +21,9 @@ namespace AuthService.Application.UseCases
 
         public async Task<AuthenticatedDTO> Handle(AuthenticateUserQuery request, CancellationToken cancellationToken)
         {
-            var user = await _unitOfWork.Users.GetAsync(u => u.Username == request.Login || u.Email == request.Login);
+            var user = await _unitOfWork.Users.GetAsync(u => u.Username == request.login || u.Email == request.login);
 
-            if (user == null || !_passwordHasher.VerifyPassword(request.Password!, user.HashedPassword!))
+            if (user == null || !_passwordHasher.VerifyPassword(request.password!, user.HashedPassword!))
             {
                 throw new ArgumentException("Wrong login or/and password");
             }

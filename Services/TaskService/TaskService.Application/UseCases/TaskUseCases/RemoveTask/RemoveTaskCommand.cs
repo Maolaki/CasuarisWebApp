@@ -3,8 +3,8 @@
 namespace TaskService.Application.UseCases
 {
     public record RemoveTaskCommand(
-        string username,
-        int CompanyId,
-        int TaskId
+        string? username,
+        int? companyId,
+        int? taskId
         ) : IRequest<Unit>;
 }

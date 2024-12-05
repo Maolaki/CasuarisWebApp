@@ -9,18 +9,18 @@ namespace UnionService.Application.UseCases
             RuleFor(x => x.username)
                 .NotEmpty().WithMessage("Username should not be empty.");
 
-            RuleFor(x => x.CompanyId)
+            RuleFor(x => x.companyId)
                 .GreaterThan(0).WithMessage("CompanyId must be greater than 0.");
 
-            RuleFor(x => x.Name)
+            RuleFor(x => x.name)
                 .MaximumLength(100).WithMessage("Name must not exceed 100 characters.")
-                .When(x => !string.IsNullOrEmpty(x.Name));
+                .When(x => !string.IsNullOrEmpty(x.name));
 
-            RuleFor(x => x.Description)
+            RuleFor(x => x.description)
                 .MaximumLength(500).WithMessage("Description must not exceed 500 characters.")
-                .When(x => !string.IsNullOrEmpty(x.Description));
+                .When(x => !string.IsNullOrEmpty(x.description));
 
-            RuleFor(x => x.ImageFile)
+            RuleFor(x => x.imageFile)
                 .Must(file => file == null || file.Length <= 5000000)
                 .WithMessage("If provided, image size must not exceed 5 MB.")
                 .Must(file => file == null ||
@@ -28,8 +28,8 @@ namespace UnionService.Application.UseCases
                               file.ContentType.Equals("image/png", StringComparison.OrdinalIgnoreCase))
                 .WithMessage("If provided, image must be of type JPEG or PNG.");
 
-            RuleFor(x => new { x.Name, x.Description, x.ImageFile })
-                .Must(x => !string.IsNullOrEmpty(x.Name) || !string.IsNullOrEmpty(x.Description) || x.ImageFile != null)
+            RuleFor(x => new { x.name, x.description, x.imageFile })
+                .Must(x => !string.IsNullOrEmpty(x.name) || !string.IsNullOrEmpty(x.description) || x.imageFile != null)
                 .WithMessage("At least one of Name, Description, or LogoData must be provided.");
         }
     }

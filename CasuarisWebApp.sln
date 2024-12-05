@@ -49,6 +49,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CasuarisWebApp.AppHost", "C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CasuarisWebApp.ServiceDefaults", "CasuarisWebApp.ServiceDefaults\CasuarisWebApp.ServiceDefaults.csproj", "{17342D05-B703-4A65-9F3D-329A842CA78F}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "FrontendApp", "FrontendApp\FrontendApp.esproj", "{9B911AC5-73DB-42B7-B23E-B6D1A48F262E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,6 +129,12 @@ Global
 		{17342D05-B703-4A65-9F3D-329A842CA78F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17342D05-B703-4A65-9F3D-329A842CA78F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17342D05-B703-4A65-9F3D-329A842CA78F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B911AC5-73DB-42B7-B23E-B6D1A48F262E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B911AC5-73DB-42B7-B23E-B6D1A48F262E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B911AC5-73DB-42B7-B23E-B6D1A48F262E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{9B911AC5-73DB-42B7-B23E-B6D1A48F262E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B911AC5-73DB-42B7-B23E-B6D1A48F262E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B911AC5-73DB-42B7-B23E-B6D1A48F262E}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

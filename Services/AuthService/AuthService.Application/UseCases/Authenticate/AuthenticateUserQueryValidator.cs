@@ -6,7 +6,7 @@ namespace AuthService.Application.UseCases
     {
         public AuthenticateUserQueryValidator()
         {
-            RuleFor(x => x.Login)
+            RuleFor(x => x.login)
                 .NotEmpty()
                 .WithMessage("Login is required.")
                 .MinimumLength(3)
@@ -14,7 +14,7 @@ namespace AuthService.Application.UseCases
                 .MaximumLength(20)
                 .WithMessage("Login cannot exceed 20 characters.");
 
-            RuleFor(x => x.Password)
+            RuleFor(x => x.password)
                 .NotEmpty()
                 .WithMessage("Password is required.")
                 .MinimumLength(6)

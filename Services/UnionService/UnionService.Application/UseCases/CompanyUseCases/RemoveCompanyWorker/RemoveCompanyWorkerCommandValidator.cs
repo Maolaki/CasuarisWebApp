@@ -9,21 +9,15 @@ namespace UnionService.Application.UseCases
             RuleFor(x => x.username)
                 .NotEmpty().WithMessage("Username should not be empty.");
 
-            RuleFor(x => x.CompanyId)
+            RuleFor(x => x.companyId)
                 .GreaterThan(0).WithMessage("CompanyId must be greater than 0.");
 
-            RuleFor(x => x.UserId)
+            RuleFor(x => x.userId)
                 .GreaterThan(0).WithMessage("UserId must be greater than 0.");
 
-            RuleFor(x => x.Role)
+            RuleFor(x => x.role)
                 .NotEmpty().WithMessage("Role is required.")
-                .Must(BeAValidRole).WithMessage("Invalid role. Allowed roles: Owner, Manager, Performer.");
-        }
-
-        private bool BeAValidRole(string role)
-        {
-            var allowedRoles = new[] { "Owner", "Manager", "Performer" };
-            return allowedRoles.Contains(role);
+                .IsInEnum().WithMessage("Invalid role. Allowed roles: Owner, Manager, Performer.");
         }
     }
 }

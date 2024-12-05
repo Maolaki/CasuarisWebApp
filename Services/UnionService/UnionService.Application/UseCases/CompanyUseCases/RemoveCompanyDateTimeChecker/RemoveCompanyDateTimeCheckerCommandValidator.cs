@@ -9,10 +9,10 @@ namespace UnionService.Application.UseCases
             RuleFor(x => x.username)
                 .NotEmpty().WithMessage("Username should not be empty.");
 
-            RuleFor(x => x.CompanyId)
+            RuleFor(x => x.companyId)
                 .GreaterThan(0).WithMessage("CompanyId must be greater than 0.");
 
-            RuleFor(x => x.DateTimeCheckerId)
+            RuleFor(x => x.dateTimeCheckerId)
                 .GreaterThan(0).WithMessage("DateTimeCheckerId must be greater than 0.");
         }
     }

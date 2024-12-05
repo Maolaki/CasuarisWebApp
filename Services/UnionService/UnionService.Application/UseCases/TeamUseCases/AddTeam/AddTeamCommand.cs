@@ -3,9 +3,9 @@
 namespace UnionService.Application.UseCases
 {
     public record AddTeamCommand(
-        string Name,
-        string Description,
-        string username,
-        int CompanyId
+        string? username,
+        int? companyId,
+        string? name,
+        string? description
         ) : IRequest<Unit>;
 }

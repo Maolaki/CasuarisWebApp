@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using UnionService.Domain.Entities;
+using UnionService.Domain.Enums;
 using UnionService.Domain.Interfaces;
 
 namespace UnionService.Application.UseCases
@@ -17,46 +18,45 @@ namespace UnionService.Application.UseCases
 
         public async Task<Unit> Handle(AddInvitationCommand request, CancellationToken cancellationToken)
         {
-            if (await _accessService.CheckManagerAccessAsync(request.CompanyId, request.username))
-                throw new ArgumentException("User have no permission");
-
-            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.CompanyId);
+            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.companyId);
             if (existingCompany == null)
             {
-                throw new ArgumentException($"Company with Id {request.CompanyId} does not exist.");
+                throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
             }
 
-            var existingUser = await _unitOfWork.Users.GetAsync(u => u.Id == request.UserId);
+            if (!await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!))
+                throw new ArgumentException("User have no permission");
+
+            var existingUser = await _unitOfWork.Users.GetAsync(u => u.Id == request.userId);
             if (existingUser == null)
             {
-                throw new ArgumentException($"User with Id {request.UserId} does not exist.");
+                throw new ArgumentException($"User with Id {request.userId} does not exist.");
             }
 
-            switch (request.Type)
+            if (existingCompany.Owners!.Contains(existingUser) 
+                || existingCompany.Managers!.Contains(existingUser) 
+                || existingCompany.Performers!.FirstOrDefault(p => p.User == existingUser) != null)
             {
-                case Domain.Enums.InvitationType.Company:
+                throw new ArgumentException($"User with id {request.userId} already in company.");
+            }
 
-                    break;
-
-                case Domain.Enums.InvitationType.Team:
-                    var existingTeam = existingCompany.Teams!.FirstOrDefault(t => t.Id == request.TeamId);
-                    if (existingTeam == null)
-                    {
-                        throw new ArgumentException($"Team with Id {request.TeamId} does not exist.");
-                    }
-                    break;
-
-                default:
-                    throw new ArgumentException();
+            if (request.type == Domain.Enums.InvitationType.Team)
+            {
+                var existingTeam = existingCompany.Teams!.FirstOrDefault(t => t.Id == request.teamId);
+                if (existingTeam == null)
+                {
+                    throw new ArgumentException($"Team with Id {request.teamId} does not exist.");
+                }
             }
 
             var invitation = new Invitation
             {
-                Description = request.Description,
-                UserId = request.UserId,
-                CompanyId = request.CompanyId,
-                TeamId = request.TeamId,
-                Type = request.Type,
+                Description = request.description,
+                UserId = (int)request.userId!,
+                CompanyId = (int)request.companyId!,
+                Role = request.role,
+                TeamId = request.teamId,
+                Type = (InvitationType)request.type!,
             };
 
             _unitOfWork.Invitations.Create(invitation);

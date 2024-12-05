@@ -2,6 +2,7 @@
 using TaskService.Domain.Entities;
 using TaskService.Domain.Interfaces;
 using TaskService.Domain.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace TaskService.Application.UseCases
 {
@@ -18,34 +19,34 @@ namespace TaskService.Application.UseCases
 
         public async Task<Unit> Handle(AddResourceCommand request, CancellationToken cancellationToken)
         {
-            if (await _accessService.CheckManagerAccessAsync(request.CompanyId, request.username))
-                throw new ArgumentException("User have no permission");
-
-            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.CompanyId);
+            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.companyId);
             if (existingCompany == null)
             {
-                throw new ArgumentException($"Company with Id {request.CompanyId} does not exist.");
+                throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
             }
 
-            var existingTaskInfo = existingCompany.Tasks?.FirstOrDefault(td => td.Id == request.TaskInfoId);
+            if (!await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!))
+                throw new ArgumentException("User have no permission");
+
+            var existingTaskInfo = existingCompany.Tasks?.FirstOrDefault(td => td.Id == request.taskInfoId);
             if (existingTaskInfo == null)
             {
-                throw new ArgumentException($"Task with Id {request.TaskInfoId} does not exist.");
+                throw new ArgumentException($"Task with Id {request.taskInfoId} does not exist.");
             }
 
             var existingTaskData = existingTaskInfo.Data;
             if (existingTaskData == null)
             {
-                throw new ArgumentException($"Task with Id {request.TaskInfoId} don't have data.");
+                throw new ArgumentException($"Task with Id {request.taskInfoId} don't have data.");
             }
 
             var newResource = new Resource
             {
                 BaseTaskDataId = existingTaskData.Id,
-                Type = request.Type,
-                ContentType = request.Type == ResourceType.image || request.Type == ResourceType.video ? request.ContentType : null,
-                Data = request.Type == ResourceType.text ? request.ResourceData : null,
-                DataBytes = request.Type == ResourceType.image || request.Type == ResourceType.video ? request.ResourceDataBytes : null
+                Type = (ResourceType)request.type!,
+                ContentType = request.type == ResourceType.image || request.type == ResourceType.video ? request.imageFile!.ContentType : null,
+                Data = request.type == ResourceType.text ? request.resourceData : null,
+                DataBytes = request.type == ResourceType.image || request.type == ResourceType.video ? ConvertToByteArray(request.imageFile) : null
             };
 
             _unitOfWork.Resources.Create(newResource);
@@ -60,6 +61,16 @@ namespace TaskService.Application.UseCases
             await _unitOfWork.SaveAsync();
 
             return Unit.Value;
+        }
+
+        private byte[]? ConvertToByteArray(IFormFile? file)
+        {
+            if (file is null)
+                return null;
+
+            using var memoryStream = new MemoryStream();
+            file.CopyTo(memoryStream);
+            return memoryStream.ToArray();
         }
     }
 }

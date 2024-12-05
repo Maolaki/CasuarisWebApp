@@ -6,7 +6,7 @@ namespace AuthService.Application.UseCases
     {
         public RevokeAllTokensCommandValidator()
         {
-            RuleFor(x => x.User)
+            RuleFor(x => x.user)
                 .NotNull()
                 .WithMessage("User cannot be null.");
         }

@@ -3,11 +3,11 @@
 namespace TaskService.Application.UseCases
 {
     public record AddTaskCommand(
-        string username,
-        int CompanyId,
-        int? ParentId,
-        string? Name,
-        string? Description,
-        decimal Budget
+        string? username,
+        int? companyId,
+        int? parentId,
+        string? name,
+        string? description,
+        decimal? budget
     ) : IRequest<Unit>;
 }

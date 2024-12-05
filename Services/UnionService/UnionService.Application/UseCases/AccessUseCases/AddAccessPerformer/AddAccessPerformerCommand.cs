@@ -3,9 +3,9 @@
 namespace UnionService.Application.UseCases
 {
     public record AddAccessPerformerCommand(
-        string username,
-        int CompanyId,
-        int AccessId,
-        int UserId
+        string? username,
+        int? companyId,
+        int? accessId,
+        int? userId
         ) : IRequest<Unit>;
 }

@@ -4,7 +4,7 @@ using AuthService.Application.DTOs;
 namespace AuthService.Application.UseCases
 {
     public record AuthenticateUserQuery(
-        string? Login,
-        string? Password
+        string? login,
+        string? password
     ) : IRequest<AuthenticatedDTO>;
 }

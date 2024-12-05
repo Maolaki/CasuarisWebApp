@@ -4,11 +4,12 @@ using UnionService.Domain.Enums;
 namespace UnionService.Application.UseCases
 {
     public record AddInvitationCommand(
-        string? Description,
-        int UserId,
-        string username,
-        int CompanyId,
-        int? TeamId,
-        InvitationType Type
+        string? username,
+        string? description,
+        int? userId,
+        int? companyId,
+        CompanyRole? role,
+        int? teamId,
+        InvitationType? type
     ) : IRequest<Unit>;
 }

@@ -20,19 +20,22 @@ namespace TaskService.Application.UseCases
 
         public async Task<TaskDataDTO> Handle(GetTaskDataQuery request, CancellationToken cancellationToken)
         {
-            var hasManagerAccess = await _accessService.CheckManagerAccessAsync(request.CompanyId, request.username);
-            var hasPerformerAccess = await _accessService.CheckPerformerTaskAccessAsync(request.CompanyId, request.TaskId, request.username);
+            var existingCompany = await _unitOfWork.Companies.GetAsync(c => c.Id == request.companyId);
+            if (existingCompany == null)
+                throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
+
+            var taskInfo = existingCompany.Tasks!.FirstOrDefault(t => t.Id == request.taskId);
+            if (taskInfo == null)
+            {
+                throw new ArgumentException($"Task with Id {request.taskId} not found for CompanyId {request.companyId}.");
+            }
+
+            var hasManagerAccess = await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!);
+            var hasPerformerAccess = await _accessService.HavePerformerTaskAccessAsync(existingCompany.Id, taskInfo.Id, request.username!);
 
             if (!hasManagerAccess && !hasPerformerAccess)
             {
                 throw new UnauthorizedAccessException("User does not have access to this task.");
-            }
-
-            var taskInfo = await _unitOfWork.TasksInfo.GetAsync(t => t.CompanyId == request.CompanyId && t.Id == request.TaskId);
-
-            if (taskInfo == null)
-            {
-                throw new ArgumentException($"Task with Id {request.TaskId} not found for CompanyId {request.CompanyId}.");
             }
 
             var taskDataDTO = _mapper.Map<TaskDataDTO>(taskInfo);

@@ -4,9 +4,9 @@ using UnionService.Application.DTOs;
 namespace UnionService.Application.UseCases
 {
     public record GetTeamsQuery(
-        string username,
-        int CompanyId,
-        int PageNumber,
-        int PageSize
+        string? username,
+        int? companyId,
+        int? pageNumber,
+        int? pageSize
     ) : IRequest<IEnumerable<TeamDTO>>;
 }

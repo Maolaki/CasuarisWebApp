@@ -3,7 +3,7 @@
 namespace UnionService.Application.UseCases
 {
     public record RemoveCompanyCommand(
-        string username,
-        int CompanyId
+        string? username,
+        int? companyId
         ) : IRequest<Unit>;
 }

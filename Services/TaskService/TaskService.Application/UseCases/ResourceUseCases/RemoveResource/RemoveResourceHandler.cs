@@ -16,19 +16,19 @@ namespace TaskService.Application.UseCases
 
         public async Task<Unit> Handle(RemoveResourceCommand request, CancellationToken cancellationToken)
         {
-            if (await _accessService.CheckManagerAccessAsync(request.CompanyId, request.username))
-                throw new ArgumentException("User have no permission");
-
-            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.CompanyId);
+            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.companyId);
             if (existingCompany == null)
             {
-                throw new ArgumentException($"Company with Id {request.CompanyId} does not exist.");
+                throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
             }
 
-            var existingResource = await _unitOfWork.Resources.GetAsync(r => r.Id == request.ResourceId);
+            if (await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!))
+                throw new ArgumentException("User have no permission");
+
+            var existingResource = await _unitOfWork.Resources.GetAsync(r => r.Id == request.resourceId);
             if (existingResource == null)
             {
-                throw new ArgumentException($"Resource with Id {request.ResourceId} does not exist.");
+                throw new ArgumentException($"Resource with Id {request.resourceId} does not exist.");
             }
 
             var existingTaskData = existingResource.BaseTaskData;

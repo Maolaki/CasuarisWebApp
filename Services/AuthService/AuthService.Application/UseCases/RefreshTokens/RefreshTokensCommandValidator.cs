@@ -6,11 +6,11 @@ namespace AuthService.Application.UseCases
     {
         public RefreshTokensCommandValidator()
         {
-            RuleFor(x => x.AccessToken)
+            RuleFor(x => x.accessToken)
                 .NotEmpty()
                 .WithMessage("Access token is required.");
 
-            RuleFor(x => x.RefreshToken)
+            RuleFor(x => x.refreshToken)
                 .NotEmpty()
                 .WithMessage("Refresh token is required.");
         }

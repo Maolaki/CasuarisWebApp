@@ -16,27 +16,27 @@ namespace UnionService.Application.UseCases
 
         public async Task<Unit> Handle(RemoveAccessPerformerCommand request, CancellationToken cancellationToken)
         {
-            if (await _accessService.CheckManagerAccessAsync(request.CompanyId, request.username))
-                throw new ArgumentException("User have no permission");
-
-            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.CompanyId);
+            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.companyId);
             if (existingCompany == null)
             {
-                throw new ArgumentException($"Company with Id {request.CompanyId} does not exist.");
+                throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
             }
 
-            var existingAccess = existingCompany.Accesses!.FirstOrDefault(a => a.Id == request.AccessId);
+            if (!await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!))
+                throw new ArgumentException("User have no permission");
+
+            var existingAccess = existingCompany.Accesses!.FirstOrDefault(a => a.Id == request.accessId);
             if (existingAccess == null)
             {
-                throw new ArgumentException($"Access with Id {request.AccessId} does not exist.");
+                throw new ArgumentException($"Access with Id {request.accessId} does not exist.");
             }
 
-            if (existingAccess.Performers == null || !existingAccess.Performers.Any(p => p.Id == request.UserId))
+            if (existingAccess.Performers == null || !existingAccess.Performers.Any(p => p.Id == request.userId))
             {
-                throw new ArgumentException($"User with Id {request.UserId} is not a performer for Access with Id {request.AccessId}.");
+                throw new ArgumentException($"User with Id {request.userId} is not a performer for Access with Id {request.accessId}.");
             }
 
-            var performerToRemove = existingAccess.Performers.First(p => p.Id == request.UserId);
+            var performerToRemove = existingAccess.Performers.First(p => p.Id == request.userId);
             existingAccess.Performers.Remove(performerToRemove);
 
             await _unitOfWork.SaveAsync();

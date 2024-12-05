@@ -3,8 +3,8 @@
 namespace UnionService.Application.UseCases
 {
     public record RemoveCompanyDateTimeCheckerCommand(
-        string username,
-        int CompanyId,
-        int DateTimeCheckerId
+        string? username,
+        int? companyId,
+        int? dateTimeCheckerId
         ) : IRequest<Unit>;
 }

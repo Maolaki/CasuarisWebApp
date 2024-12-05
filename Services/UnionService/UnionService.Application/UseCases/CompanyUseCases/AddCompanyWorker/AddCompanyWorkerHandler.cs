@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using UnionService.Domain.Entities;
+using UnionService.Domain.Enums;
 using UnionService.Domain.Interfaces;
 
 namespace UnionService.Application.UseCases
@@ -7,29 +8,34 @@ namespace UnionService.Application.UseCases
     public class AddCompanyWorkerHandler : IRequestHandler<AddCompanyWorkerCommand, Unit>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IAccessService _accessService;
 
-        public AddCompanyWorkerHandler(IUnitOfWork unitOfWork)
+        public AddCompanyWorkerHandler(IUnitOfWork unitOfWork, IAccessService accessService)
         {
             _unitOfWork = unitOfWork;
+            _accessService = accessService;
         }
 
         public async Task<Unit> Handle(AddCompanyWorkerCommand request, CancellationToken cancellationToken)
         {
-            var existingCompany = await _unitOfWork.Companies.GetAsync(c => c.Id == request.CompanyId);
+            var existingCompany = await _unitOfWork.Companies.GetAsync(c => c.Id == request.companyId);
             if (existingCompany == null)
             {
-                throw new ArgumentException($"Company with Id {request.CompanyId} does not exist.");
+                throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
             }
 
-            var existingUser = await _unitOfWork.Users.GetAsync(u => u.Id == request.UserId);
+            if (!await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!))
+                throw new ArgumentException("User have no permission");
+
+            var existingUser = await _unitOfWork.Users.GetAsync(u => u.Id == request.userId);
             if (existingUser == null)
             {
-                throw new ArgumentException($"User with Id {request.UserId} does not exist.");
+                throw new ArgumentException($"User with Id {request.userId} does not exist.");
             }
 
-            switch (request.Role)
+            switch (request.role)
             {
-                case "Owner":
+                case CompanyRole.owner:
                     if (existingCompany.Owners == null)
                         existingCompany.Owners = new List<User>();
 
@@ -52,7 +58,7 @@ namespace UnionService.Application.UseCases
                         existingCompany.Owners.Add(existingUser);
                     break;
 
-                case "Manager":
+                case CompanyRole.manager:
                     if (existingCompany.Managers == null)
                         existingCompany.Managers = new List<User>();
 
@@ -75,7 +81,7 @@ namespace UnionService.Application.UseCases
                         existingCompany.Managers.Add(existingUser);
                     break;
 
-                case "Performer":
+                case CompanyRole.performer:
                     if (existingCompany.Performers == null)
                         existingCompany.Performers = new List<PerformerInCompany>();
 
@@ -100,17 +106,14 @@ namespace UnionService.Application.UseCases
                         CompanyId = existingCompany.Id,
                         JoinDate = DateTime.UtcNow,
                         WorkLogs = new List<WorkLog>(),
-                        Salary = request.Salary ?? 0,
-                        WorkHours = request.WorkHours ?? 0,
-                        WorkDays = request.WorkDays ?? 0,
+                        Salary = request.salary ?? 0,
+                        WorkHours = request.workHours ?? 0,
+                        WorkDays = request.workDays ?? 0,
                     };
 
                     _unitOfWork.Performers.Create(newPerformer);
                     existingCompany.Performers.Add(newPerformer);
                     break;
-
-                default:
-                    throw new ArgumentException($"Invalid role: {request.Role}. Allowed roles: Owner, Manager, Performer.");
             }
 
             await _unitOfWork.SaveAsync();
