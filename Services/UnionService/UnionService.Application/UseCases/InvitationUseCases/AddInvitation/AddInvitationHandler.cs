@@ -40,7 +40,7 @@ namespace UnionService.Application.UseCases
                 throw new ArgumentException($"User with id {request.userId} already in company.");
             }
 
-            if (request.type == Domain.Enums.InvitationType.Team)
+            if (request.type == Domain.Enums.InvitationType.team)
             {
                 var existingTeam = existingCompany.Teams!.FirstOrDefault(t => t.Id == request.teamId);
                 if (existingTeam == null)

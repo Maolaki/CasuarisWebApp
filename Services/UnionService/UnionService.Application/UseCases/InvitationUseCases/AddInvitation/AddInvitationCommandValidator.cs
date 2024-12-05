@@ -25,11 +25,11 @@ namespace UnionService.Application.UseCases
 
             RuleFor(x => x.role)
                 .IsInEnum().WithMessage("Role must be enum.")
-                .When(x => x.type == InvitationType.Company);
+                .When(x => x.type == InvitationType.company);
 
             RuleFor(x => x.teamId)
                 .GreaterThan(0).WithMessage("TeamId must be greater than 0.")
-                .When(x => x.type == InvitationType.Team);
+                .When(x => x.type == InvitationType.team);
         }
     }
 }

@@ -16,23 +16,23 @@ namespace UnionService.Application.UseCases
 
         public async Task<Unit> Handle(UpdateTeamCommand request, CancellationToken cancellationToken)
         {
-            if (await _accessService.CheckManagerAccessAsync(request.CompanyId, request.username))
-                throw new ArgumentException("User have no permission");
-
-            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.CompanyId);
+            var existingCompany = await _unitOfWork.Companies.GetAsync(td => td.Id == request.companyId);
             if (existingCompany == null)
             {
-                throw new ArgumentException($"Company with Id {request.CompanyId} does not exist.");
+                throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
             }
 
-            var existingTeam = existingCompany.Teams!.FirstOrDefault(t => t.Id == request.TeamId);
+            if (!await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!))
+                throw new ArgumentException("User have no permission");
+
+            var existingTeam = existingCompany.Teams!.FirstOrDefault(t => t.Id == request.teamId);
             if (existingTeam == null)
             {
-                throw new ArgumentException($"Team with Id {request.TeamId} does not exist.");
+                throw new ArgumentException($"Team with Id {request.teamId} does not exist.");
             }
 
-            existingTeam.Name = request.Name ?? existingTeam.Name;
-            existingTeam.Description = request.Description ?? existingTeam.Description;
+            existingTeam.Name = request.name ?? existingTeam.Name;
+            existingTeam.Description = request.description ?? existingTeam.Description;
 
             _unitOfWork.Teams.Update(existingTeam);
             await _unitOfWork.SaveAsync();
