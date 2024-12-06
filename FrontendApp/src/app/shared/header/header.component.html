@@ -1,4 +1,14 @@
-<div class="header">
-  <button class="menu-button" (click)="toggleNavigation()">☰</button>
-  <ng-content></ng-content>
+<div class="header"
+     [class.navigation-open]="isNavigationOpen"
+     [class.navigation-close]="!isNavigationOpen"
+     [class.page-profile]="currentPage === 'profile'"
+     [class.page-register]="currentPage === 'register'">
+  <button class="navigation-button"
+          [class.navigation-open]="isNavigationOpen"
+          [class.navigation-close]="!isNavigationOpen"
+          (click)="toggleNavigation()">☰</button>
+  <div class="log-reg-container" *ngIf="currentPage !== 'register'">
+    <button class="auth-button" (click)="toggleNavigation()">Reg In</button>
+    <button class="auth-button" (click)="toggleNavigation()">Log In</button>
+  </div>
 </div>

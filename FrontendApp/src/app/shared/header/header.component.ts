@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { NavigationStateService } from '../../services/navigation-state.service';
 
 @Component({
   selector: 'app-header',
@@ -6,8 +7,16 @@ import { Component } from '@angular/core';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent {
-  toggleNavigation() {
-    const nav = document.querySelector('.navigation');
-    nav?.classList.toggle('open');
+  @Input() currentPage = 'profile';
+  isNavigationOpen = false;
+
+  constructor(private navigationService: NavigationStateService) {
+    this.navigationService.navigationOpen$.subscribe((state) => {
+      this.isNavigationOpen = state;
+    });
+  }
+
+  toggleNavigation(): void {
+    this.navigationService.toggleNavigation(true);
   }
 }

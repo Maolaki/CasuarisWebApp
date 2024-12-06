@@ -1,4 +1,5 @@
 html, body {
+  background-color: var(--background-color);
   height: 100%;
   margin: 0;
   padding: 0;
@@ -10,4 +11,22 @@ main {
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --navigation-width: 16.66%;
+  }
+}
+
+@media (max-width: 1024px) and (min-width: 768px) {
+  :root {
+    --navigation-width: 33.33%;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --navigation-width: 100%;
+  }
 }

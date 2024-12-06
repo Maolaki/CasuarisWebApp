@@ -1,12 +1,24 @@
 .profile-container {
+  top: 100px;
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 3fr 1fr;
+  right: 0;
+  height: 100%;
   gap: 20px;
-  padding: 20px;
-  background-color: var(--background-color);
   color: var(--text-color);
-  margin-left: 0; /* Убедитесь, что нет сдвига при скрытой панели */
+  transition: width 0.3s ease, left 0.3s ease;
 }
+
+  .profile-container.navigation-close {
+    width: 100%;
+    left: 0;
+  }
+
+  .profile-container.navigation-open {
+    width: calc(100% - var(--navigation-width));
+    left: var(--navigation-width);
+  }
 
 .grid-item {
   background-color: var(--primary-color);
@@ -28,6 +40,7 @@ button {
   color: var(--text-color);
   border: none;
   border-radius: 5px;
+  text-align: center;
 }
 
 .row {
@@ -38,10 +51,9 @@ button {
   text-align: center;
 }
 
-/* Адаптивность */
 @media (max-width: 768px) {
   .profile-container {
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr 2fr 1fr;
   }
 }
 

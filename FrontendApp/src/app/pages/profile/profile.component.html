@@ -1,6 +1,4 @@
-<app-header></app-header>
-
-<div class="profile-container">
+<div [class.profile-container]="true" [class.navigation-open]="isNavigationOpen">
   <div class="grid-item"></div>
   <div class="grid-item main">
     <button>Button 1</button>
@@ -10,5 +8,3 @@
   </div>
   <div class="grid-item"></div>
 </div>
-
-<app-navigation></app-navigation>

@@ -1,15 +1,20 @@
 .navigation {
   position: absolute;
-  left: -270px;
+  width: var(--navigation-width);
+  left: calc(-var(--navigation-width));
   top: 0;
   height: 100%;
-  background-color: var(--third-color);
+  background-color: var(--first-color);
   color: var(--text-color);
   display: flex;
   flex-direction: column;
   transition: left 0.3s ease;
   z-index: 1000;
 }
+
+  .navigation.open {
+    left: 0;
+  }
 
 .big-button {
   background-color: var(--secondary-color);
@@ -55,7 +60,6 @@ button {
 
 .close-button {
   align-self: flex-end;
-  margin-bottom: 20px;
   background-color: var(--secondary-color);
   color: var(--text-color);
   font-size: 18px;
@@ -82,9 +86,7 @@ button {
     font-size: 1.2rem;
   }
 
-  .navigation.open {
-    left: 0;
-  }
+
 }
 
 @media (max-width: 1024px) and (min-width: 768px) {
@@ -101,9 +103,7 @@ button {
     font-size: 1.1rem;
   }
 
-  .navigation.open {
-    left: 0;
-  }
+
 }
 
 @media (max-width: 767px) {
@@ -120,7 +120,5 @@ button {
     font-size: 1rem;
   }
 
-  .navigation.open {
-    left: 0;
-  }
+
 }
