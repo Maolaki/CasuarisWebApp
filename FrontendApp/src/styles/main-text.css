@@ -1,0 +1,9 @@
+.main-text {
+  background-color: transparent;
+  color: black;
+  text-align: center;
+  padding: 10px 20px;
+  width: 100%;
+  font-size: 30px;
+  font-weight: bold;
+}

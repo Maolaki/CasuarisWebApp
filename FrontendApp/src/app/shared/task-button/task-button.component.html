@@ -1,0 +1,13 @@
+<div class="task-button" (click)="onTaskClick()">
+  <div class="task-header">
+    <span class="task-name">{{ task.name }}</span>
+    <span class="company-id">Company ID: {{ task.companyId }}</span>
+  </div>
+  <div class="task-details">
+    <span>Budget: {{ task.budget | currency:'USD' }}</span>
+    <span>Complete Date: {{ task.completeDate }}</span>
+  </div>
+  <div class="task-status">
+    {{ getTaskStatus(task.status) }}
+  </div>
+</div>

@@ -1,0 +1,46 @@
+<div class="task-info-container" [class.navigation-open]="isNavigationOpen">
+  <div class="grid-item"></div>
+  <div class="grid-item">
+    <div class="info-block">
+      <h2>{{ task.name }}</h2>
+    </div>
+    <div class="info-block">
+      <p>{{ task.description }}</p>
+    </div>
+    <div class="task-buttons">
+      <button (click)="showDetails()"
+              [class.active]="isDetailsVisible">
+        Details
+      </button>
+      <button (click)="showSubtasks()"
+              [class.active]="isSubtasksVisible">
+        Subtasks
+      </button>
+    </div>
+
+  </div>
+  <div class="grid-item"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item content-box" [class.details-active]="isDetailsVisible" [class.subtasks-active]="isSubtasksVisible">
+    <div *ngIf="isDetailsVisible" class="resources">
+      <div *ngFor="let resource of task.resources; let first = first; let last = last"
+           [class.no-top-border]="first"
+           [class.no-bottom-border]="last"
+           class="resource-item">
+        <ng-container *ngIf="resource.resourceType === resourceType.text">
+          <p>{{ resource.data }}</p>
+        </ng-container>
+
+        <ng-container *ngIf="resource.resourceType === resourceType.image">
+          <img *ngIf="resource.imageFile" [src]="resource.imageFile" alt="Resource Image" />
+        </ng-container>
+      </div>
+    </div>
+
+    <div *ngIf="isSubtasksVisible" class="tasks-grid">
+      <app-task-button *ngFor="let subtask of task.childTasks" [task]="subtask"></app-task-button>
+    </div>
+  </div>
+
+  <div class="grid-item"></div>
+</div>

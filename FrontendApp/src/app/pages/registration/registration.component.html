@@ -1,1 +1,64 @@
-<p>registration works!</p>
+<div class="registration-container" [class.navigation-open]="isNavigationOpen">
+  <div class="grid-item"></div>
+  <div class="grid-item">
+    <div class="form-container">
+      <form class="form" (ngSubmit)="onSubmit()" #registrationForm="ngForm">
+        <!-- Username -->
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text"
+                 id="username"
+                 name="username"
+                 [(ngModel)]="registerUser.username"
+                 required
+                 minlength="3"
+                 maxlength="20"
+                 #username="ngModel"
+                 class="form-control" />
+          <div *ngIf="username.invalid && username.touched" class="error">
+            <div *ngIf="username.errors?.['required']">Username is required.</div>
+            <div *ngIf="username.errors?.['minlength']">Username must be at least 3 characters long.</div>
+            <div *ngIf="username.errors?.['maxlength']">Username cannot exceed 20 characters.</div>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email"
+                 id="email"
+                 name="email"
+                 [(ngModel)]="registerUser.email"
+                 required
+                 email
+                 #email="ngModel"
+                 class="form-control" />
+          <div *ngIf="email.invalid && email.touched" class="error">
+            <div *ngIf="email.errors?.['required']">Email is required.</div>
+            <div *ngIf="email.errors?.['email']">Email is not in a valid format.</div>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password"
+                 id="password"
+                 name="password"
+                 [(ngModel)]="registerUser.password"
+                 required
+                 minlength="8"
+                 #password="ngModel"
+                 class="form-control" />
+          <div *ngIf="password.invalid && password.touched" class="error">
+            <div *ngIf="password.errors?.['required']">Password is required.</div>
+            <div *ngIf="password.errors?.['minlength']">Password must be at least 8 characters long.</div>
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="!registrationForm.valid">Register</button>
+      </form>
+    </div>
+  </div>
+  <div class="grid-item"></div>
+</div>

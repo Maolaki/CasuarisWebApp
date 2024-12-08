@@ -1,5 +1,5 @@
 .navigation {
-  position: absolute;
+  position: fixed;
   width: var(--navigation-width);
   left: calc(-var(--navigation-width));
   top: 0;

@@ -12,6 +12,14 @@ import { RegistrationComponent } from './pages/registration/registration.compone
 import { AuthorizationComponent } from './pages/authorization/authorization.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { NavigationComponent } from './shared/navigation/navigation.component';
+import { InviteButtonComponent } from './shared/invite-button/invite-button.component';
+import { PaginationComponent } from './shared/pagination/pagination.component';
+import { HttpClientModule } from '@angular/common/http';
+import { UnionService } from './services/api-services/union.service';
+import { TeamButtonComponent } from './shared/team-button/team-button.component';
+import { TaskButtonComponent } from './shared/task-button/task-button.component';
+import { FormsModule } from '@angular/forms';
+import { TaskInfoComponent } from './pages/task-info/task-info.component';
 
 @NgModule({
   declarations: [
@@ -23,14 +31,23 @@ import { NavigationComponent } from './shared/navigation/navigation.component';
     TeamsComponent,
     RegistrationComponent,
     AuthorizationComponent,
+    TaskInfoComponent,
+
+
     HeaderComponent,
-    NavigationComponent
+    NavigationComponent,
+    InviteButtonComponent,
+    PaginationComponent,
+    TeamButtonComponent,
+    TaskButtonComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    FormsModule
   ],
-  providers: [],
+  providers: [UnionService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

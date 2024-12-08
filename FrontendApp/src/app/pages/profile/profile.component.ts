@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css']
+  styleUrls: ['./profile.component.css', '../../../styles/main-button.css', '../../../styles/main-text.css']
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   private navSubscription!: Subscription;

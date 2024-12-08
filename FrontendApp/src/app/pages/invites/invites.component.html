@@ -1,1 +1,18 @@
-<p>invites works!</p>
+<div class="profile-container" [class.navigation-open]="isNavigationOpen">
+  <div class="grid-item"></div>
+  <div class="grid-item">
+    <div class="row" *ngFor="let invite of paginatedInvites">
+      <app-invite-button [invite]="invite"></app-invite-button>
+    </div>
+  </div>
+  <div class="grid-item"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item">
+    <app-pagination [totalItems]="invites.length"
+                    [pageSize]="pageSize"
+                    [currentPage]="currentPage"
+                    (pageChange)="onPageChange($event)">
+    </app-pagination>
+  </div>
+  <div class="grid-item"></div>
+</div>

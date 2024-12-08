@@ -1,0 +1,37 @@
+.main-button {
+  background-color: transparent;
+  border: 1px solid black;
+  color: black;
+  text-align: center;
+  padding: 10px 20px;
+  border-radius: 10px;
+  width: 60%;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+  .main-button:hover {
+    background-color: black;
+    color: white;
+  }
+
+.main-button-red {
+  background-color: transparent;
+  border: 1px solid red;
+  color: red;
+  text-align: center;
+  padding: 10px 20px;
+  border-radius: 10px;
+  width: 60%;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+  .main-button-red:hover {
+    background-color: red;
+    color: white;
+  }

@@ -1,0 +1,128 @@
+.task-info-container {
+  top: 140px;
+  position: absolute;
+  display: grid;
+  grid-template-columns: 1fr 5fr 1fr;
+  grid-template-rows: auto;
+  right: 0;
+  width: 100%;
+  padding: 0px 0px 100px;
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+  .task-info-container.navigation-open {
+    width: calc(100% - var(--navigation-width));
+  }
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.info-block {
+  background-color: #E0E0E0;
+  border: 1px solid #000;
+  border-radius: 10px;
+  padding: 15px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.task-buttons {
+  border-radius: 10px;
+  width: 100%;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+  .task-buttons button {
+    background-color: #E0E0E0;
+    color: #000;
+    border: 1px solid #000;
+    border-radius: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+  }
+
+    .task-buttons button.active {
+      background-color: #4A148C;
+      color: #FFF;
+      border-radius: 10px 10px 0 0;
+      cursor: default;
+    }
+
+    .task-buttons button:not(.active) {
+      background-color: #E0E0E0;
+    }
+
+    .task-buttons button:hover:not(.active) {
+      background-color: #D3D3D3;
+    }
+
+.content-box {
+  background-color: #E0E0E0;
+  border: 1px solid #000;
+  border-radius: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-radius 0.3s ease;
+}
+
+.resources {
+  width: 100%;
+}
+
+  .content-box.details-active {
+    border-radius: 0 0 10px 10px;
+  }
+
+  .content-box.subtasks-active {
+    border-radius: 10px;
+  }
+
+.tasks-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-items: center;
+  gap: 10px;
+  padding: 15px;
+}
+
+@media (max-width: 1024px) and (min-width: 768px) {
+  .tasks-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .tasks-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.resource-item {
+  border-bottom: 1px solid #000;
+  padding: 10px;
+  text-align: left;
+}
+
+  .resource-item.no-top-border {
+    border-top: none;
+  }
+
+  .resource-item.no-bottom-border {
+    border-bottom: none;
+  }
+
+  .resource-item img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }

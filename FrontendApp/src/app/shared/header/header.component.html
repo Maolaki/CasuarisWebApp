@@ -2,13 +2,16 @@
      [class.navigation-open]="isNavigationOpen"
      [class.navigation-close]="!isNavigationOpen"
      [class.page-profile]="currentPage === 'profile'"
-     [class.page-register]="currentPage === 'register'">
+     [class.page-registration]="currentPage === 'registration'"
+     [class.page-authorization]="currentPage === 'authorization'">
   <button class="navigation-button"
           [class.navigation-open]="isNavigationOpen"
           [class.navigation-close]="!isNavigationOpen"
+          [class.page-registration]="currentPage === 'registration'"
+          [class.page-authorization]="currentPage === 'authorization'"
           (click)="toggleNavigation()">☰</button>
   <div class="log-reg-container" *ngIf="currentPage !== 'register'">
-    <button class="auth-button" (click)="toggleNavigation()">Reg In</button>
-    <button class="auth-button" (click)="toggleNavigation()">Log In</button>
+    <button class="log-reg-button" (click)="toggleNavigation()">Reg In</button>
+    <button class="log-reg-button" (click)="toggleNavigation()">Log In</button>
   </div>
 </div>

@@ -1,26 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AddAccessPerformerCommand } from '../models/commands/unionservice/add-access-performer.command';
-import { RemoveAccessPerformerCommand } from '../models/commands/unionservice/remove-access-performer.command';
-import { AddCompanyCommand } from '../models/commands/unionservice/add-company.command';
-import { UpdateCompanyCommand } from '../models/commands/unionservice/update-company.command';
-import { RemoveCompanyCommand } from '../models/commands/unionservice/remove-company.command';
-import { AddInvitationCommand } from '../models/commands/unionservice/add-invitation.command';
-import { RemoveInvitationCommand } from '../models/commands/unionservice/remove-invitation.command';
-import { AddTeamCommand } from '../models/commands/unionservice/add-team.command';
-import { AddTeamMemberCommand } from '../models/commands/unionservice/add-team-member.command';
-import { GetTeamsQuery } from '../models/queries/unionservice/get-teams.query';
-import { RemoveTeamCommand } from '../models/commands/unionservice/remove-team.command';
-import { RemoveTeamMemberCommand } from '../models/commands/unionservice/remove-team-member.command';
-import { UpdateTeamCommand } from '../models/commands/unionservice/update-team.command';
-import { TeamDTO } from '../models/dtos/team.dto';
-import { GetCompaniesQuery } from '../models/queries/unionservice/get-companies.query';
-import { RemoveCompanyWorkerCommand } from '../models/commands/unionservice/remove-company-worker.command';
-import { AddCompanyWorkerCommand } from '../models/commands/unionservice/add-company-worker.command';
-import { AddCompanyDateTimeCheckerCommand } from '../models/commands/unionservice/add-company-datetime-checker.command';
-import { RemoveCompanyDateTimeCheckerCommand } from '../models/commands/unionservice/remove-company-datetime-checker.command';
-import { CompanyDTO } from '../models/dtos/company.dto';
+import { AddAccessPerformerCommand } from '../../models/commands/unionservice/add-access-performer.command';
+import { AddCompanyDateTimeCheckerCommand } from '../../models/commands/unionservice/add-company-datetime-checker.command';
+import { AddCompanyWorkerCommand } from '../../models/commands/unionservice/add-company-worker.command';
+import { AddCompanyCommand } from '../../models/commands/unionservice/add-company.command';
+import { AddInvitationCommand } from '../../models/commands/unionservice/add-invitation.command';
+import { AddTeamMemberCommand } from '../../models/commands/unionservice/add-team-member.command';
+import { AddTeamCommand } from '../../models/commands/unionservice/add-team.command';
+import { RemoveAccessPerformerCommand } from '../../models/commands/unionservice/remove-access-performer.command';
+import { RemoveCompanyDateTimeCheckerCommand } from '../../models/commands/unionservice/remove-company-datetime-checker.command';
+import { RemoveCompanyWorkerCommand } from '../../models/commands/unionservice/remove-company-worker.command';
+import { RemoveCompanyCommand } from '../../models/commands/unionservice/remove-company.command';
+import { RemoveInvitationCommand } from '../../models/commands/unionservice/remove-invitation.command';
+import { RemoveTeamMemberCommand } from '../../models/commands/unionservice/remove-team-member.command';
+import { RemoveTeamCommand } from '../../models/commands/unionservice/remove-team.command';
+import { UpdateCompanyCommand } from '../../models/commands/unionservice/update-company.command';
+import { UpdateTeamCommand } from '../../models/commands/unionservice/update-team.command';
+import { CompanyDTO } from '../../models/dtos/company.dto';
+import { InvitationDTO } from '../../models/dtos/invitation.dto';
+import { TeamDTO } from '../../models/dtos/team.dto';
+import { GetCompaniesQuery } from '../../models/queries/unionservice/get-companies.query';
+import { GetTeamsQuery } from '../../models/queries/unionservice/get-teams.query';
+import { GetInvitationQuery } from '../../models/queries/unionservice/get-invitation.query';
 
 @Injectable({
   providedIn: 'root'
@@ -73,6 +75,10 @@ export class UnionService {
   }
 
   // Invitation Operations
+  getInvitations(query: GetInvitationQuery): Observable<InvitationDTO[]> {
+    return this.http.post<InvitationDTO[]>(`${this.apiUrl}/invitation/get`, query, { headers: this.getAuthHeaders() });
+  }
+
   addInvitation(command: AddInvitationCommand): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/invitation/add`, command, { headers: this.getAuthHeaders() });
   }

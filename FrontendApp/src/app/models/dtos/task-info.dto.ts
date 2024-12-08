@@ -1,4 +1,5 @@
 import { TaskStatus } from "../../enums/task-status.enum";
+import { UserDTO } from "./user.dto";
 
 export interface TaskInfoDTO {
   id: number;
@@ -7,5 +8,6 @@ export interface TaskInfoDTO {
   description: string | null;
   budget: number | null;
   status: TaskStatus | null;
-  completeDate: string | null; 
+  completeDate: string | null;
+  members: UserDTO[] | null;
 }

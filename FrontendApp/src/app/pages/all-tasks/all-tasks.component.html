@@ -1,1 +1,34 @@
-<p>all-tasks works!</p>
+<div class="profile-container" [class.navigation-open]="isNavigationOpen">
+  <!-- Новая строка для фильтрации -->
+  <div class="grid-item"></div>
+  <div class="grid-item">
+    <div class="filter-container">
+      <input type="text" placeholder="Search by name" [(ngModel)]="filter.name" (input)="applyFilters()" />
+      <input type="number" placeholder="Minimum budget" [(ngModel)]="filter.minBudget" (input)="applyFilters()" />
+      <input type="number" placeholder="Maximum budget" [(ngModel)]="filter.maxBudget" (input)="applyFilters()" />
+      <select [(ngModel)]="filter.status" (change)="applyFilters()">
+        <option value="">All Statuses</option>
+        <option *ngFor="let status of taskStatuses" [value]="status">{{ status }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="grid-item"></div>
+
+  <!-- Основное содержимое -->
+  <div class="grid-item"></div>
+  <div class="grid-item">
+    <div class="tasks-grid">
+      <app-task-button *ngFor="let task of paginatedTasks" [task]="task"></app-task-button>
+    </div>
+  </div>
+  <div class="grid-item"></div>
+  <div class="grid-item"></div>
+  <div class="grid-item">
+    <app-pagination [totalItems]="filteredTasks.length"
+                    [pageSize]="pageSize"
+                    [currentPage]="currentPage"
+                    (pageChange)="onPageChange($event)">
+    </app-pagination>
+  </div>
+  <div class="grid-item"></div>
+</div>

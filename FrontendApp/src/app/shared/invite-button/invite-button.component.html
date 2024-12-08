@@ -1,0 +1,17 @@
+<div class="invite-row">
+  <div class="invite-info">
+    <span>ID: {{ invite.id }}</span>
+    <span>Company: {{ invite.companyId }}</span>
+    <span *ngIf="invite.type === invitationType.team">
+      Team: {{ invite.teamId }}
+    </span>
+    <span *ngIf="invite.type === invitationType.company">
+      Role: {{ invite.companyRole }}
+    </span>
+  </div>
+  <div class="button-group">
+    <button class="view-button" (click)="onView()">View</button>
+    <button class="accept-button" (click)="onAccept()">Accept</button>
+    <button class="decline-button" (click)="onDecline()">Decline</button>
+  </div>
+</div>
