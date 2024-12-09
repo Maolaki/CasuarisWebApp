@@ -98,6 +98,20 @@ namespace UnionService.API.Controllers
         [Authorize, ServiceFilter(typeof(EnsureAuthenticatedUserFilter))]
         public async Task<IActionResult> GetCompanies([FromBody] GetCompaniesQuery query)
         {
+            if (User.Identity!.Name != query.username)
+                return BadRequest("User is not authenticated.");
+
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpPost("get-role")]
+        [Authorize, ServiceFilter(typeof(EnsureAuthenticatedUserFilter))]
+        public async Task<IActionResult> GetCompanyRole([FromBody] GetCompanyRoleQuery query)
+        {
+            if (User.Identity!.Name != query.username)
+                return BadRequest("User is not authenticated.");
+
             var result = await _mediator.Send(query);
             return Ok(result);
         }

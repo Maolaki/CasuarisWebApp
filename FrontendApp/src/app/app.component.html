@@ -1,5 +1,12 @@
-<app-header [currentPage]="currentPage"></app-header>
-<app-navigation></app-navigation>
+<app-error-modal *ngIf="errorMessage"
+                 [errorMessage]="errorMessage"
+                 (close)="closeModal()">
+</app-error-modal>
+
+<app-header [currentPage]="currentPage" [isAuthorized]="isAuthorized"></app-header>
+<app-navigation [isAuthorized]="isAuthorized"></app-navigation>
+
+<router-outlet></router-outlet>
 
 <div class="container">
   <router-outlet></router-outlet>

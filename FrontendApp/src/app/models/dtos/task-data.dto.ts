@@ -6,6 +6,7 @@ import { UserDTO } from "./user.dto";
 export interface TaskDataDTO {
   id: number;
   companyId: number | null;
+  parentId: number | null;
   name: string | null;
   description: string | null;
   budget: number | null;

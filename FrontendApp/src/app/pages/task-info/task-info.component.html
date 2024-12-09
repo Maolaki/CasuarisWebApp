@@ -1,11 +1,17 @@
 <div class="task-info-container" [class.navigation-open]="isNavigationOpen">
   <div class="grid-item"></div>
   <div class="grid-item">
-    <div class="info-block">
-      <h2>{{ task.name }}</h2>
+    <div *ngIf="task?.parentId !== null">
+      <button class="red-button" (click)="goToParentTask()">Go to Parent Task</button>
+    </div>
+    <div *ngIf="task?.parentId === null">
+      <button class="green-button" (click)="goToAllTasks()">Go to All Tasks</button>
     </div>
     <div class="info-block">
-      <p>{{ task.description }}</p>
+      <h2>{{ task?.name }}</h2>
+    </div>
+    <div class="info-block">
+      <p>{{ task?.description }}</p>
     </div>
     <div class="task-buttons">
       <button (click)="showDetails()"
@@ -23,7 +29,7 @@
   <div class="grid-item"></div>
   <div class="grid-item content-box" [class.details-active]="isDetailsVisible" [class.subtasks-active]="isSubtasksVisible">
     <div *ngIf="isDetailsVisible" class="resources">
-      <div *ngFor="let resource of task.resources; let first = first; let last = last"
+      <div *ngFor="let resource of task?.resources; let first = first; let last = last"
            [class.no-top-border]="first"
            [class.no-bottom-border]="last"
            class="resource-item">
@@ -38,7 +44,7 @@
     </div>
 
     <div *ngIf="isSubtasksVisible" class="tasks-grid">
-      <app-task-button *ngFor="let subtask of task.childTasks" [task]="subtask"></app-task-button>
+      <app-task-button *ngFor="let subtask of task?.childTasks" [task]="subtask"></app-task-button>
     </div>
   </div>
 

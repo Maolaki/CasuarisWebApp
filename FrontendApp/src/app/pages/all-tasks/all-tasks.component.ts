@@ -1,8 +1,10 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NavigationStateService } from '../../services/navigation-state.service';
+import { TaskService } from '../../services/api-services/task.service'; 
 import { TaskStatus } from '../../enums/task-status.enum';
 import { TaskInfoDTO } from '../../models/dtos/task-info.dto';
+import { GetAllTasksInfoQuery } from '../../models/queries/taskservice/get-all-tasks-info.query';
 
 @Component({
   selector: 'app-all-tasks',
@@ -31,7 +33,10 @@ export class AllTasksComponent implements OnInit, OnDestroy {
     .filter(key => isNaN(Number(key)))
     .map(key => key);
 
-  constructor(private navigationService: NavigationStateService) { }
+  constructor(
+    private navigationService: NavigationStateService,
+    private taskService: TaskService
+  ) { }
 
   ngOnInit(): void {
     this.navSubscription = this.navigationService.navigationOpen$.subscribe(state => {
@@ -49,24 +54,24 @@ export class AllTasksComponent implements OnInit, OnDestroy {
   }
 
   loadTasks(): void {
-    this.tasks = Array.from({ length: 50 }, (_, i) => ({
-      id: i + 1,
-      companyId: i % 5 + 1,
-      name: `Task ${i + 1}`,
-      description: `Description for Task ${i + 1}`,
-      budget: Math.floor(Math.random() * 1000) + 100,
-      status: this.getRandomTaskStatus(),
-      completeDate: new Date(Date.now() - Math.random() * 10000000000).toISOString().split('T')[0],
-      members: null
-    }));
+    const companyId = localStorage.getItem('companyId');
+    const parsedCompanyId = companyId ? parseInt(companyId, 10) : null;
 
-    this.filteredTasks = [...this.tasks];
-    this.paginate();
-  }
+    const query: GetAllTasksInfoQuery = {
+      username: localStorage.getItem('username'),
+      companyId: parsedCompanyId
+    };
 
-  getRandomTaskStatus(): TaskStatus {
-    const statuses = Object.values(TaskStatus) as TaskStatus[];
-    return statuses[Math.floor(Math.random() * statuses.length)];
+    this.taskService.getAllTasksInfo(query).subscribe(
+      tasks => {
+        this.tasks = tasks;
+        this.filteredTasks = [...this.tasks];
+        this.paginate();
+      },
+      error => {
+        console.error('Ошибка при загрузке задач:', error);
+      }
+    );
   }
 
   applyFilters(): void {
@@ -75,17 +80,15 @@ export class AllTasksComponent implements OnInit, OnDestroy {
       const matchesMinBudget = this.filter.minBudget === null || (task.budget !== null && task.budget >= this.filter.minBudget);
       const matchesMaxBudget = this.filter.maxBudget === null || (task.budget !== null && task.budget <= this.filter.maxBudget);
 
-      // Преобразуем filter.status в TaskStatus
       const filterStatus = this.filter.status as unknown as TaskStatus | null;
       const matchesStatus = !filterStatus || task.status === filterStatus;
 
       return matchesName && matchesMinBudget && matchesMaxBudget && matchesStatus;
     });
 
-    this.currentPage = 1; // Сбрасываем текущую страницу
+    this.currentPage = 1;
     this.paginate();
   }
-
 
   paginate(): void {
     const startIndex = (this.currentPage - 1) * this.pageSize;

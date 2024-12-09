@@ -1,24 +1,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AddResourceCommand } from '../models/commands/taskservice/add-resource.command';
-import { AddTaskCommand } from '../models/commands/taskservice/add-task.command';
-import { ChangeResourcePositionCommand } from '../models/commands/taskservice/change-resource-position.command';
-import { RemoveResourceCommand } from '../models/commands/taskservice/remove-resource.command';
-import { UpdateResourceCommand } from '../models/commands/taskservice/update-resource.command';
-import { UpdateTaskCommand } from '../models/commands/taskservice/update-task.command';
-import { TaskDataDTO } from '../models/dtos/task-data.dto';
-import { TaskInfoDTO } from '../models/dtos/task-info.dto';
-import { GetAllTasksInfoQuery } from '../models/queries/taskservice/get-all-tasks-info.query';
-import { GetTaskDataQuery } from '../models/queries/taskservice/get-task-data.query';
-import { RemoveTaskCommand } from '../models/commands/taskservice/remove-task.command';
+import { AddResourceCommand } from '../../models/commands/taskservice/add-resource.command';
+import { AddTaskCommand } from '../../models/commands/taskservice/add-task.command';
+import { ChangeResourcePositionCommand } from '../../models/commands/taskservice/change-resource-position.command';
+import { RemoveResourceCommand } from '../../models/commands/taskservice/remove-resource.command';
+import { RemoveTaskCommand } from '../../models/commands/taskservice/remove-task.command';
+import { UpdateResourceCommand } from '../../models/commands/taskservice/update-resource.command';
+import { UpdateTaskCommand } from '../../models/commands/taskservice/update-task.command';
+import { TaskDataDTO } from '../../models/dtos/task-data.dto';
+import { TaskInfoDTO } from '../../models/dtos/task-info.dto';
+import { GetAllTasksInfoQuery } from '../../models/queries/taskservice/get-all-tasks-info.query';
+import { GetTaskDataQuery } from '../../models/queries/taskservice/get-task-data.query';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
-  private apiUrl = 'https://localhost:7001';
+  private apiUrl = 'https://localhost:7003';
 
   constructor(private http: HttpClient) { }
 

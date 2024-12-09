@@ -2,6 +2,7 @@
 using TaskService.Application.DTOs;
 using TaskService.Domain.Interfaces;
 using AutoMapper;
+using TaskService.Domain.Entities;
 
 namespace TaskService.Application.UseCases
 {
@@ -49,6 +50,10 @@ namespace TaskService.Application.UseCases
             {
                 taskDataDTO.ChildTasks = _mapper.Map<List<TaskInfoDTO>>(taskInfo.ChildTasks);
             }
+
+            var access = existingCompany.Accesses?.FirstOrDefault(a => a.TaskId == request.taskId);
+            var performers = access?.Performers ?? Enumerable.Empty<User>();
+            taskDataDTO.Members = _mapper.Map<UserDTO[]>(performers);
 
             return taskDataDTO;
         }

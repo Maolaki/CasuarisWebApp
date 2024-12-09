@@ -7,11 +7,13 @@ import { TeamsComponent } from './pages/teams/teams.component';
 import { AllTasksComponent } from './pages/all-tasks/all-tasks.component';
 import { TaskInfoComponent } from './pages/task-info/task-info.component';
 import { RegistrationComponent } from './pages/registration/registration.component';
+import { AuthorizationComponent } from './pages/authorization/authorization.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'registration', component: RegistrationComponent},
+  { path: 'registration', component: RegistrationComponent },
+  { path: 'authorization', component: AuthorizationComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'invites', component: InvitesComponent },
   { path: 'teams', component: TeamsComponent },

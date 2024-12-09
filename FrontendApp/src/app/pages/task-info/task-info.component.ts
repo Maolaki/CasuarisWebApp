@@ -1,9 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { TaskStatus } from '../../enums/task-status.enum';
-import { TaskDataDTO } from '../../models/dtos/task-data.dto';
-import { ResourceType } from '../../enums/resource-type.enum';
-import { NavigationStateService } from '../../services/navigation-state.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { TaskDataDTO } from '../../models/dtos/task-data.dto';
+import { TaskInfoDTO } from '../../models/dtos/task-info.dto';
+import { TaskService } from '../../services/api-services/task.service';
+import { UnionService } from '../../services/api-services/union.service';
+import { ResourceType } from '../../enums/resource-type.enum';
 
 @Component({
   selector: 'app-task-info',
@@ -11,18 +13,37 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./task-info.component.css']
 })
 export class TaskInfoComponent implements OnInit, OnDestroy {
-  private navSubscription!: Subscription;
-  isNavigationOpen = false;
+  task: TaskDataDTO | null = null;
+  companyRole: string | null = null;
+  parentTask: TaskInfoDTO | null = null;
   resourceType = ResourceType;
+  isNavigationOpen = false;
+  isDetailsVisible = false;
+  isSubtasksVisible = false;
+
+  private navSubscription!: Subscription;
 
   constructor(
-    private navigationService: NavigationStateService
+    private taskService: TaskService,
+    private unionService: UnionService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.navSubscription = this.navigationService.navigationOpen$.subscribe(state => {
-      this.isNavigationOpen = state;
-    });
+    const taskId = localStorage.getItem('taskId');
+    this.companyRole = localStorage.getItem('companyRole');
+    const companyId = localStorage.getItem('companyId');
+    const parsedCompanyId = companyId ? parseInt(companyId, 10) : null;
+
+    if (taskId) {
+      this.taskService.getTaskData({
+        username: localStorage.getItem('username'),
+        companyId: parsedCompanyId,
+        taskId: parseInt(taskId)
+      }).subscribe(taskData => {
+        this.task = taskData;
+      });
+    }
   }
 
   ngOnDestroy(): void {
@@ -31,40 +52,16 @@ export class TaskInfoComponent implements OnInit, OnDestroy {
     }
   }
 
-  task: TaskDataDTO = {
-    id: 1,
-    companyId: null,
-    name: 'Oreo Task',
-    description: 'Oreo Task is a task management tool.',
-    budget: 1000,
-    status: TaskStatus.todo,
-    completeDate: '2024-12-10',
-    resources: [
-      { id: 1, data: 'fewrhtyukilykhtrfewrhtyukilykhrt', imageFile: null, resourceType: ResourceType.text },
-      { id: 2, data: 'efwhrgukjtefwukyhtrethukyjhtrukyikyhrthyjukjthrgthrgr', imageFile: null, resourceType: ResourceType.text }
-    ],
-    childTasks: [
-      { id: 1, companyId: 3, name: 'Subtask 1', description: 'Subtask description', budget: 100, status: TaskStatus.inprogress, completeDate: '2024-12-10', members: [] },
-      { id: 2, companyId: 4, name: 'Subtask 2', description: 'Subtask description', budget: 200, status: TaskStatus.done, completeDate: '2024-12-12', members: [] },
-      { id: 2, companyId: 4, name: 'Subtask 2', description: 'Subtask description', budget: 200, status: TaskStatus.done, completeDate: '2024-12-12', members: [] },
-      { id: 2, companyId: 4, name: 'Subtask 2', description: 'Subtask description', budget: 200, status: TaskStatus.done, completeDate: '2024-12-12', members: [] },
-      { id: 2, companyId: 4, name: 'Subtask 2', description: 'Subtask description', budget: 200, status: TaskStatus.done, completeDate: '2024-12-12', members: [] },
-      { id: 64, companyId: 4, name: 'Subtask 2', description: 'Subtask description', budget: 200, status: TaskStatus.done, completeDate: '2024-12-12', members: [] },
-      { id: 77, companyId: 4, name: 'Subtask 2', description: 'Subtask description', budget: 200, status: TaskStatus.done, completeDate: '2024-12-12', members: [] },
-      { id: 7, companyId: 4, name: 'Subtask 2', description: 'Subtask description', budget: 200, status: TaskStatus.done, completeDate: '2024-12-12', members: [] },
-      { id: 5, companyId: 4, name: 'Subtask 2', description: 'Subtask description', budget: 200, status: TaskStatus.done, completeDate: '2024-12-12', members: [] },
-      { id: 42, companyId: 4, name: 'Subtask 2', description: 'Subtask description', budget: 200, status: TaskStatus.done, completeDate: '2024-12-12', members: [] },
-      { id: 3, companyId: 4, name: 'Subtask 2', description: 'Subtask description', budget: 200, status: TaskStatus.done, completeDate: '2024-12-12', members: [] },
-      { id: 2, companyId: 4, name: 'Subtask 2', description: 'Subtask description', budget: 200, status: TaskStatus.done, completeDate: '2024-12-12', members: [] },
-      { id: 31, companyId: 4, name: 'Subtask 2', description: 'Subtask description', budget: 200, status: TaskStatus.done, completeDate: '2024-12-12', members: [] },
-      { id: 2, companyId: 4, name: 'Subtask 2', description: 'Subtask description', budget: 200, status: TaskStatus.done, completeDate: '2024-12-12', members: [] },
-      { id: 2, companyId: 4, name: 'Subtask 2', description: 'Subtask description', budget: 200, status: TaskStatus.done, completeDate: '2024-12-12', members: [] }
-    ],
-    members: []
-  };
+  goToParentTask(): void {
+    if (this.parentTask) {
+      localStorage.setItem('taskId', this.parentTask.id.toString());
+      this.router.navigate(['/task-info']);
+    }
+  }
 
-  isDetailsVisible = true;
-  isSubtasksVisible = false;
+  goToAllTasks(): void {
+    this.router.navigate(['/all-tasks']);
+  }
 
   showDetails(): void {
     this.isDetailsVisible = true;

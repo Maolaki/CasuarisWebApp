@@ -23,12 +23,14 @@ import { TeamDTO } from '../../models/dtos/team.dto';
 import { GetCompaniesQuery } from '../../models/queries/unionservice/get-companies.query';
 import { GetTeamsQuery } from '../../models/queries/unionservice/get-teams.query';
 import { GetInvitationQuery } from '../../models/queries/unionservice/get-invitation.query';
+import { CompanyRole } from '../../enums/company-role.enum';
+import { GetCompanyRoleQuery } from '../../models/queries/unionservice/get-company-role.query';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UnionService {
-  private apiUrl = 'https://localhost:7002/unionservice';
+  private apiUrl = 'https://localhost:7002';
 
   constructor(private http: HttpClient) { }
 
@@ -56,6 +58,10 @@ export class UnionService {
 
   getCompanies(query: GetCompaniesQuery): Observable<CompanyDTO[]> {
     return this.http.post<CompanyDTO[]>(`${this.apiUrl}/company/get-companies`, query, { headers: this.getAuthHeaders() });
+  }
+
+  getCompanyRole(query: GetCompanyRoleQuery): Observable<CompanyRole> {
+    return this.http.post<CompanyRole>(`${this.apiUrl}/company/get-role`, query, { headers: this.getAuthHeaders() });
   }
 
   addCompanyWorker(command: AddCompanyWorkerCommand): Observable<void> {

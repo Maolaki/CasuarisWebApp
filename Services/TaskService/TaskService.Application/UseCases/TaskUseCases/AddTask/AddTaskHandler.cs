@@ -87,6 +87,8 @@ public class AddTaskHandler : IRequestHandler<AddTaskCommand, Unit>
 
         _unitOfWork.Accesses.Create(newAccess);
 
+        await _unitOfWork.SaveAsync();
+
         return Unit.Value;
     }
 }

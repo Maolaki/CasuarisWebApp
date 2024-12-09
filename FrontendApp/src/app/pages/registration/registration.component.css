@@ -75,13 +75,13 @@ button {
 }
 
 @media (max-width: 768px) {
-  .profile-container {
+  .registration-container {
     grid-template-columns: 1fr 5fr 1fr;
   }
 }
 
 @media (max-width: 480px) {
-  .profile-container {
+  .registration-container {
     grid-template-columns: 1fr;
   }
 

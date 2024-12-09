@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { RefreshTokensCommand } from '../../models/commands/authservice/refresh-tokens.command';
 import { RegisterUserCommand } from '../../models/commands/authservice/register-user.command';
 import { AuthenticatedDTO } from '../../models/dtos/authenticated.dto';
 import { AuthenticateUserQuery } from '../../models/queries/authservice/authenticate-user.query';
+import { RefreshTokenCommand } from '../../models/commands/authservice/refresh-token.command';
 
 
 @Injectable({
@@ -28,7 +28,7 @@ export class AuthService {
     return this.http.get<number>(`${this.authApiUrl}/get-id`, { headers: this.getAuthHeaders() });
   }
 
-  refreshTokens(command: RefreshTokensCommand): Observable<AuthenticatedDTO> {
+  refreshToken(command: RefreshTokenCommand): Observable<AuthenticatedDTO> {
     return this.http.post<AuthenticatedDTO>(`${this.tokenApiUrl}/refresh`, command);
   }
 

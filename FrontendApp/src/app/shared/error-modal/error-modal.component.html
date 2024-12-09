@@ -1,0 +1,10 @@
+<div class="modal-backdrop" *ngIf="errorMessage" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <span class="error-icon">❌</span>
+    </div>
+    <div class="modal-body">
+      <p>{{ errorMessage }}</p>
+    </div>
+  </div>
+</div>

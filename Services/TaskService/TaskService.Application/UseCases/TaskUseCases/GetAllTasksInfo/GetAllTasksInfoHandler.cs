@@ -41,6 +41,15 @@ public class GetAllTasksInfoQueryHandler : IRequestHandler<GetAllTasksInfoQuery,
                 .ToList() ?? new List<BaseTaskInfo>();
         }
 
-        return _mapper.Map<IEnumerable<TaskInfoDTO>>(tasks);
+        var taskInfoDtos = tasks.Select(task =>
+        {
+            var access = existingCompany.Accesses?.FirstOrDefault(a => a.TaskId == task.Id);
+            var performers = access?.Performers ?? Enumerable.Empty<User>();
+            var taskDto = _mapper.Map<TaskInfoDTO>(task);
+            taskDto.Members = _mapper.Map<UserDTO[]>(performers);
+            return taskDto;
+        });
+
+        return taskInfoDtos;
     }
 }

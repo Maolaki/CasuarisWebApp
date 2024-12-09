@@ -1,7 +1,7 @@
 <div class="task-button" (click)="onTaskClick()">
   <div class="task-header">
     <span class="task-name">{{ task.name }}</span>
-    <span class="company-id">Company ID: {{ task.companyId }}</span>
+    <span class="company-id">Company: {{ task.companyName }}</span>
   </div>
   <div class="task-details">
     <span>Budget: {{ task.budget | currency:'USD' }}</span>

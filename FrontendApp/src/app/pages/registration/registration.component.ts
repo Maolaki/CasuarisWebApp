@@ -51,10 +51,10 @@ export class RegistrationComponent implements OnInit, OnDestroy {
 
           this.authService.login(loginQuery).subscribe({
             next: (authData: AuthenticatedDTO) => {
-              if (authData.accessToken && authData.refreshToken) {
+              if (authData.username && authData.accessToken && authData.refreshToken) {
                 localStorage.setItem('accessToken', authData.accessToken);
                 localStorage.setItem('refreshToken', authData.refreshToken);
-                localStorage.setItem('username', this.registerUser.username!);
+                localStorage.setItem('username', authData.username);
 
                 this.router.navigate(['/home']);
               }

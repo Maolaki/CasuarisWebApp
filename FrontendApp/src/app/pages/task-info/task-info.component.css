@@ -21,6 +21,16 @@
   gap: 10px;
 }
 
+.red-button {
+  background-color: red;
+  color: white;
+}
+
+.green-button {
+  background-color: green;
+  color: white;
+}
+
 .info-block {
   background-color: #E0E0E0;
   border: 1px solid #000;

@@ -44,6 +44,7 @@ namespace AuthService.Application.UseCases
 
             return new AuthenticatedDTO
             {
+                Username = user.Username,
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
             };
