@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { AddAccessPerformerCommand } from '../../models/commands/unionservice/add-access-performer.command';
 import { AddCompanyDateTimeCheckerCommand } from '../../models/commands/unionservice/add-company-datetime-checker.command';
 import { AddCompanyWorkerCommand } from '../../models/commands/unionservice/add-company-worker.command';
-import { AddCompanyCommand } from '../../models/commands/unionservice/add-company.command';
 import { AddInvitationCommand } from '../../models/commands/unionservice/add-invitation.command';
 import { AddTeamMemberCommand } from '../../models/commands/unionservice/add-team-member.command';
 import { AddTeamCommand } from '../../models/commands/unionservice/add-team.command';
@@ -25,6 +24,8 @@ import { GetTeamsQuery } from '../../models/queries/unionservice/get-teams.query
 import { GetInvitationQuery } from '../../models/queries/unionservice/get-invitation.query';
 import { CompanyRole } from '../../enums/company-role.enum';
 import { GetCompanyRoleQuery } from '../../models/queries/unionservice/get-company-role.query';
+import { CompanyMemberDTO } from '../../models/dtos/company-member.dto';
+import { GetCompanyMembersQuery } from '../../models/queries/unionservice/get-company-members.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -44,8 +45,8 @@ export class UnionService {
   }
 
   // Company Operations
-  addCompany(command: AddCompanyCommand): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/company/add`, command, { headers: this.getAuthHeaders() });
+  addCompany(formData: FormData): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/company/add`, formData, { headers: this.getAuthHeaders() });
   }
 
   updateCompany(command: UpdateCompanyCommand): Observable<void> {
@@ -62,6 +63,10 @@ export class UnionService {
 
   getCompanyRole(query: GetCompanyRoleQuery): Observable<CompanyRole> {
     return this.http.post<CompanyRole>(`${this.apiUrl}/company/get-role`, query, { headers: this.getAuthHeaders() });
+  }
+
+  getCompanyMembers(query: GetCompanyMembersQuery): Observable<CompanyMemberDTO[]> {
+    return this.http.post<CompanyMemberDTO[]>(`${this.apiUrl}/company/get-members`, query, { headers: this.getAuthHeaders() });
   }
 
   addCompanyWorker(command: AddCompanyWorkerCommand): Observable<void> {

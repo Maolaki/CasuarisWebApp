@@ -1,0 +1,49 @@
+<div class="modal-backdrop" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Добавить компанию</h2>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="form-group">
+          <label for="name">Название компании</label>
+          <input type="text"
+                 id="name"
+                 name="name"
+                 [(ngModel)]="company.name"
+                 required
+                 minlength="5"
+                 maxlength="100"
+                 #name="ngModel"
+                 class="form-control" />
+          <div *ngIf="name.invalid && name.touched" class="error">
+            <div *ngIf="name.errors?.['required']">Название компании обязательно.</div>
+            <div *ngIf="name.errors?.['minlength']">Название должно быть минимум 5 символов.</div>
+            <div *ngIf="name.errors?.['maxlength']">Название не должно превышать 100 символов.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Описание компании</label>
+          <textarea id="description"
+                    name="description"
+                    [(ngModel)]="company.description"
+                    required
+                    maxlength="500"
+                    #description="ngModel"
+                    class="form-control"></textarea>
+          <div *ngIf="description.invalid && description.touched" class="error">
+            <div *ngIf="description.errors?.['required']">Описание компании обязательно.</div>
+            <div *ngIf="description.errors?.['maxlength']">Описание не должно превышать 500 символов.</div>
+          </div>
+
+          <input type="file" (change)="onFileSelected($event)" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" [disabled]="name.invalid || description.invalid" (click)="addCompany()">Добавить</button>
+          <button type="button" (click)="closeModal()">Отмена</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

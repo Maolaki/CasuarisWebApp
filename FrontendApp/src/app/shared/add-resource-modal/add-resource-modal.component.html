@@ -1,0 +1,35 @@
+<div class="modal-backdrop" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Добавить ресурс</h2>
+    </div>
+    <div class="modal-body">
+      <label for="resourceType">Тип ресурса:</label>
+      <select id="resourceType" [(ngModel)]="resource.type">
+        <option [value]=0>Текст</option>
+        <option [value]=1>Изображение</option>
+        <option [value]=2>Видео</option>
+      </select>
+
+      <!-- Для текста показываем текстовое поле -->
+      <div *ngIf="resource.type == 0">
+        <textarea placeholder="Введите текст" [(ngModel)]="resource.resourceData"></textarea>
+      </div>
+
+      <!-- Для изображения показываем поле для загрузки файла -->
+      <div *ngIf="resource.type == 1">
+        <input type="file" (change)="onFileSelected($event)" />
+      </div>
+
+      <!-- Для видео показываем поле для загрузки файла -->
+      <div *ngIf="resource.type == 2">
+        <input type="file" (change)="onFileSelected($event)" />
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button (click)="addResource()">Добавить</button>
+      <button (click)="closeModal()">Отмена</button>
+    </div>
+  </div>
+</div>

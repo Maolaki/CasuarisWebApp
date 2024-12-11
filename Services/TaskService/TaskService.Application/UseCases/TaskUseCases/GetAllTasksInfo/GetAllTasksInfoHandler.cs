@@ -30,7 +30,8 @@ public class GetAllTasksInfoQueryHandler : IRequestHandler<GetAllTasksInfoQuery,
 
         if (isManagerAccess)
         {
-            tasks = existingCompany.Tasks!;
+            tasks = existingCompany.Tasks!
+                .Where(t => t.ParentId == null).ToList();
         }
         else
         {
@@ -47,6 +48,7 @@ public class GetAllTasksInfoQueryHandler : IRequestHandler<GetAllTasksInfoQuery,
             var performers = access?.Performers ?? Enumerable.Empty<User>();
             var taskDto = _mapper.Map<TaskInfoDTO>(task);
             taskDto.Members = _mapper.Map<UserDTO[]>(performers);
+            taskDto.CompanyName = existingCompany.Name;
             return taskDto;
         });
 

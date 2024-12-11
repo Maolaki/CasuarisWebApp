@@ -22,8 +22,11 @@ namespace UnionService.API.Controllers
 
         [HttpPost("add")]
         [Authorize, ServiceFilter(typeof(EnsureAuthenticatedUserFilter))]
-        public async Task<IActionResult> AddCompany([FromBody] AddCompanyCommand command)
+        public async Task<IActionResult> AddCompany([FromForm] AddCompanyCommand command)
         {
+            if (User.Identity!.Name != command.username)
+                return BadRequest("User is not authenticated.");
+
             await _mediator.Send(command);
             return Ok("Company added successfully.");
         }
@@ -108,6 +111,17 @@ namespace UnionService.API.Controllers
         [HttpPost("get-role")]
         [Authorize, ServiceFilter(typeof(EnsureAuthenticatedUserFilter))]
         public async Task<IActionResult> GetCompanyRole([FromBody] GetCompanyRoleQuery query)
+        {
+            if (User.Identity!.Name != query.username)
+                return BadRequest("User is not authenticated.");
+
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpPost("get-members")]
+        [Authorize, ServiceFilter(typeof(EnsureAuthenticatedUserFilter))]
+        public async Task<IActionResult> GetCompanyMembers([FromBody] GetCompanyMembersQuery query)
         {
             if (User.Identity!.Name != query.username)
                 return BadRequest("User is not authenticated.");

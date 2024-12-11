@@ -22,7 +22,7 @@ namespace TaskService.API.Controllers
 
         [HttpPost("add")]
         [Authorize, ServiceFilter(typeof(EnsureAuthenticatedUserFilter))]
-        public async Task<ActionResult> AddResource([FromBody] AddResourceCommand command)
+        public async Task<ActionResult> AddResource([FromForm] AddResourceCommand command)
         {
             if (User.Identity!.Name != command.username)
                 return BadRequest("User is not authenticated.");

@@ -1,10 +1,11 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { NavigationStateService } from '../../services/navigation-state.service';
-import { TaskService } from '../../services/api-services/task.service'; 
+import { TaskService } from '../../services/api-services/task.service';
 import { TaskStatus } from '../../enums/task-status.enum';
 import { TaskInfoDTO } from '../../models/dtos/task-info.dto';
 import { GetAllTasksInfoQuery } from '../../models/queries/taskservice/get-all-tasks-info.query';
+import { ModalService } from '../../services/modal-service.service';
 
 @Component({
   selector: 'app-all-tasks',
@@ -35,7 +36,8 @@ export class AllTasksComponent implements OnInit, OnDestroy {
 
   constructor(
     private navigationService: NavigationStateService,
-    private taskService: TaskService
+    private taskService: TaskService,
+    public modalService: ModalService 
   ) { }
 
   ngOnInit(): void {
@@ -116,5 +118,13 @@ export class AllTasksComponent implements OnInit, OnDestroy {
       this.pageSize = 12;
     }
     this.paginate();
+  }
+
+  openAddTaskModal(modalId : string) {
+    this.modalService.openModal(modalId);
+  }
+
+  closeModal(modalId: string) {
+    this.modalService.closeModal(modalId);
   }
 }

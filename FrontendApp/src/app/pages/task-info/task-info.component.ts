@@ -1,11 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { TaskDataDTO } from '../../models/dtos/task-data.dto';
-import { TaskInfoDTO } from '../../models/dtos/task-info.dto';
 import { TaskService } from '../../services/api-services/task.service';
-import { UnionService } from '../../services/api-services/union.service';
-import { ResourceType } from '../../enums/resource-type.enum';
+import { ModalService } from '../../services/modal-service.service';
+import { CompanyRole } from '../../enums/company-role.enum';
+import { RemoveResourceCommand } from '../../models/commands/taskservice/remove-resource.command';
+import { NavigationStateService } from '../../services/navigation-state.service';
 
 @Component({
   selector: 'app-task-info',
@@ -13,54 +16,80 @@ import { ResourceType } from '../../enums/resource-type.enum';
   styleUrls: ['./task-info.component.css']
 })
 export class TaskInfoComponent implements OnInit, OnDestroy {
-  task: TaskDataDTO | null = null;
-  companyRole: string | null = null;
-  parentTask: TaskInfoDTO | null = null;
-  resourceType = ResourceType;
+  private navSubscription!: Subscription;
   isNavigationOpen = false;
+  task: TaskDataDTO | null = null;
+  companyRole = 2;
   isDetailsVisible = false;
   isSubtasksVisible = false;
-
-  private navSubscription!: Subscription;
+  private destroy$ = new Subject<void>();
 
   constructor(
+    private navigationService: NavigationStateService,
     private taskService: TaskService,
-    private unionService: UnionService,
-    private router: Router
+    private router: Router,
+    private modalService: ModalService
   ) { }
 
   ngOnInit(): void {
+    this.navSubscription = this.navigationService.navigationOpen$.subscribe(state => {
+      this.isNavigationOpen = state;
+    });
+
     const taskId = localStorage.getItem('taskId');
-    this.companyRole = localStorage.getItem('companyRole');
+    const role = Number(localStorage.getItem('companyRole'));
+    this.companyRole = role;
     const companyId = localStorage.getItem('companyId');
     const parsedCompanyId = companyId ? parseInt(companyId, 10) : null;
 
-    if (taskId) {
+    if (taskId && parsedCompanyId) {
       this.taskService.getTaskData({
         username: localStorage.getItem('username'),
         companyId: parsedCompanyId,
         taskId: parseInt(taskId)
-      }).subscribe(taskData => {
-        this.task = taskData;
-      });
+      })
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(taskData => {
+          this.task = taskData;
+          this.processResources();
+        });
     }
   }
 
   ngOnDestroy(): void {
-    if (this.navSubscription) {
-      this.navSubscription.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  processResources(): void {
+    if (this.task?.resources) {
+      this.task.resources.forEach(resource => {
+        if (resource.type === 1 && resource.imageFile) {
+          resource.imageFileUrl = this.createImageUrlFromFile(resource.imageFile);
+        }
+      });
     }
   }
 
+  createImageUrlFromFile(imageFile: any): string {
+    const file = new Blob([imageFile], { type: imageFile.contentType });
+    return URL.createObjectURL(file);
+  }
+
   goToParentTask(): void {
-    if (this.parentTask) {
-      localStorage.setItem('taskId', this.parentTask.id.toString());
+    const parentTaskId = this.task?.parentId;
+    if (parentTaskId) {
+      localStorage.setItem('taskId', parentTaskId.toString());
       this.router.navigate(['/task-info']);
     }
   }
 
   goToAllTasks(): void {
     this.router.navigate(['/all-tasks']);
+  }
+
+  openAddResourceModal(modalId: string): void {
+    this.modalService.openModal(modalId);
   }
 
   showDetails(): void {
@@ -71,5 +100,31 @@ export class TaskInfoComponent implements OnInit, OnDestroy {
   showSubtasks(): void {
     this.isDetailsVisible = false;
     this.isSubtasksVisible = true;
+  }
+
+  openAddTaskModal(): void {
+    const modalData = {
+      parentId: this.task?.id || null,
+    };
+    this.modalService.openModal('add-task-modal', modalData);
+  }
+
+  removeResource(resourceId: number): void {
+    const command: RemoveResourceCommand = {
+      username: localStorage.getItem('username'),
+      companyId: Number(localStorage.getItem('companyId')),
+      resourceId: resourceId,
+    };
+
+    this.taskService.removeResource(command)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        () => {
+          this.task!.resources = this.task!.resources!.filter(r => r.id !== resourceId);
+        },
+        (error) => {
+          console.error('Ошибка при удалении ресурса:', error);
+        }
+      );
   }
 }

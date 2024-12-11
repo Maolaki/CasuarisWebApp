@@ -22,7 +22,7 @@ namespace TaskService.Application.UseCases
                 throw new ArgumentException($"Company with Id {request.companyId} does not exist.");
             }
 
-            if (await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!))
+            if (!await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!))
                 throw new ArgumentException("User have no permission");
 
             var existingResource = await _unitOfWork.Resources.GetAsync(r => r.Id == request.resourceId);

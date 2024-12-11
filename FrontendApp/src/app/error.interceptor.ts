@@ -31,7 +31,6 @@ export class ErrorInterceptor implements HttpInterceptor {
             return this.authService.refreshToken({ accessToken, refreshToken }).pipe(
               switchMap(authData => {
                 localStorage.setItem('accessToken', authData.accessToken ?? '');
-                localStorage.setItem('refreshToken', authData.refreshToken ?? '');
                 localStorage.setItem('username', authData.username ?? '');
 
                 const clonedRequest = req.clone({

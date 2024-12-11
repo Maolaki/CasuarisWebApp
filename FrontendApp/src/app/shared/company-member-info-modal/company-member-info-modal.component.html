@@ -1,0 +1,19 @@
+<div class="modal" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal-content">
+    <h2>Member Information</h2>
+
+    <div *ngIf="companyMember">
+      <p><strong>ID:</strong> {{ companyMember.id }}</p>
+      <p><strong>Username:</strong> {{ companyMember.username }}</p>
+      <p><strong>Email:</strong> {{ companyMember.email }}</p>
+      <p><strong>Join Date:</strong> {{ companyMember.joinDate | date }}</p>
+      <p><strong>Role:</strong> {{ getRoleName(companyMember.companyRole) }}</p>
+
+      <ng-container *ngIf="companyMember.companyRole === companyRole.performer">
+        <p><strong>Salary:</strong> {{ companyMember.salary }}</p>
+        <p><strong>Work Hours:</strong> {{ companyMember.workHours }}</p>
+        <p><strong>Work Days:</strong> {{ companyMember.workDays }}</p>
+      </ng-container>
+    </div>
+  </div>
+</div>

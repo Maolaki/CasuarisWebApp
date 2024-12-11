@@ -1,0 +1,15 @@
+<div class="modal-backdrop" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Добавить команду</h2>
+    </div>
+    <div class="modal-body">
+      <input type="text" placeholder="Название команды" [(ngModel)]="team.name" />
+      <textarea placeholder="Описание команды" [(ngModel)]="team.description"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button (click)="addTeam()">Добавить</button>
+      <button (click)="closeModal()">Отмена</button>
+    </div>
+  </div>
+</div>

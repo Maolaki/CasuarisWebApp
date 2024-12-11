@@ -10,17 +10,19 @@ import { ModalService } from './services/modal-service.service';
 export class AppComponent implements OnInit {
   currentPage = '';
   isAuthorized = false;
+  companyRole: number | null = null;
   errorMessage: string | null = null;
 
   constructor(private router: Router, private modalService: ModalService) {
     this.router.events.subscribe(() => {
       this.currentPage = this.router.url.split('/')[1] || 'home';
       this.isAuthorized = !!localStorage.getItem('username');
+      const role = localStorage.getItem('companyRole');
+      this.companyRole = role !== null ? Number(role) : null;
     });
   }
 
   ngOnInit(): void {
-    // Подписка на изменения в ModalService
     this.modalService.errorMessage$.subscribe((message) => {
       this.errorMessage = message;
     });

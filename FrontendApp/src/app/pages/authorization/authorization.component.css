@@ -17,9 +17,9 @@
 
 .form-container {
   display: flex;
-  background-color: #f0f0f0;
+  background-color: var(--third-color);
   padding: 20px;
-  border: 2px solid #000;
+  border: 2px solid var(--first-color);
   border-radius: 8px;
   width: 60%;
   max-width: 600px;

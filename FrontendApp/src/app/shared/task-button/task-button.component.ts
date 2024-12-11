@@ -30,6 +30,8 @@ export class TaskButtonComponent {
       localStorage.setItem('task', JSON.stringify(taskData));
 
       this.router.navigate(['/task-info']);
+      if (taskData.parentId !== null)
+        window.location.reload();
     });
   }
 

@@ -6,8 +6,8 @@ namespace UnionService.Application.UseCases
     {
         public AddCompanyCommandValidator()
         {
-            RuleFor(x => x.userId)
-                .GreaterThan(0).WithMessage("UserId must be greater than 0.");
+            RuleFor(x => x.username)
+                .NotEmpty().WithMessage("Username should not be empty.");
 
             RuleFor(x => x.name)
                 .NotEmpty().WithMessage("Name is required.")

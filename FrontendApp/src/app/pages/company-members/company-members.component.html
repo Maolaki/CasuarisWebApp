@@ -1,0 +1,13 @@
+<div class="grid-container" [class.navigation-open]="isNavigationOpen">
+  <div class="grid-item"></div>
+  <div class="grid-item">
+    <div class="row" *ngFor="let member of companyMembers">
+      <app-company-member [companyMember]="member"
+                          [currentUserRole]="currentUserRole">
+      </app-company-member>
+    </div>
+  </div>
+  <div class="grid-item"></div>
+</div>
+
+<app-company-member-info-modal></app-company-member-info-modal>

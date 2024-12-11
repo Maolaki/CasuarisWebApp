@@ -1,0 +1,36 @@
+.settings-container {
+  top: 140px;
+  position: absolute;
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  right: 0;
+  width: 100%;
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+  .settings-container.navigation-open {
+    width: calc(100% - var(--navigation-width));
+  }
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .settings-container {
+    grid-template-columns: 1fr 2fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .settings-container {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-item.main {
+    width: 100%;
+  }
+}

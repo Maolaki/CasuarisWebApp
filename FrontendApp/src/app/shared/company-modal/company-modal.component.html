@@ -1,0 +1,16 @@
+<div class="modal-backdrop" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Добавить компанию</h2>
+    </div>
+    <div class="modal-body">
+      <input type="text" placeholder="Название компании" [(ngModel)]="company.name" />
+      <textarea placeholder="Описание компании" [(ngModel)]="company.description"></textarea>
+      <input type="file" (change)="onFileSelected($event)" />
+    </div>
+    <div class="modal-footer">
+      <button (click)="addCompany()">Добавить</button>
+      <button (click)="closeModal()">Отмена</button>
+    </div>
+  </div>
+</div>

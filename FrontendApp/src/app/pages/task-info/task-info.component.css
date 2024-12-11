@@ -32,8 +32,8 @@
 }
 
 .info-block {
-  background-color: #E0E0E0;
-  border: 1px solid #000;
+  background-color: var(--fourth-color);
+  border: 1px solid var(--third-color);
   border-radius: 10px;
   padding: 15px;
   width: 100%;
@@ -50,7 +50,7 @@
 }
 
   .task-buttons button {
-    background-color: #E0E0E0;
+    background-color: var(--fourth-color);
     color: #000;
     border: 1px solid #000;
     border-radius: 10px;
@@ -61,10 +61,11 @@
   }
 
     .task-buttons button.active {
-      background-color: #4A148C;
+      background-color: var(--first-color);
       color: #FFF;
       border-radius: 10px 10px 0 0;
       cursor: default;
+      padding-bottom: 20px;
     }
 
     .task-buttons button:not(.active) {
@@ -76,7 +77,7 @@
     }
 
 .content-box {
-  background-color: #E0E0E0;
+  background-color: var(--fourth-color);
   border: 1px solid #000;
   border-radius: 10px;
   width: 100%;
@@ -85,11 +86,13 @@
 }
 
 .resources {
+  background-color: var(--fourth-color);
   width: 100%;
+  border-radius: 0 10px 10px 10px;
 }
 
   .content-box.details-active {
-    border-radius: 0 0 10px 10px;
+    border-radius: 0 10px 10px 10px;
   }
 
   .content-box.subtasks-active {
@@ -127,12 +130,37 @@
     border-top: none;
   }
 
-  .resource-item.no-bottom-border {
-    border-bottom: none;
-  }
-
   .resource-item img {
     max-width: 100%;
     height: auto;
     display: block;
+  }
+
+.center-button {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.task-button.add-task-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--first-color);
+  border: 2px solid var(--third-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+}
+
+  .task-button.add-task-button:hover {
+    background-color: #506b94;
+    transform: scale(1.1);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
   }

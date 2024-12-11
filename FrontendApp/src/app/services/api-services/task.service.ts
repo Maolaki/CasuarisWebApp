@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AddResourceCommand } from '../../models/commands/taskservice/add-resource.command';
 import { AddTaskCommand } from '../../models/commands/taskservice/add-task.command';
 import { ChangeResourcePositionCommand } from '../../models/commands/taskservice/change-resource-position.command';
 import { RemoveResourceCommand } from '../../models/commands/taskservice/remove-resource.command';
@@ -23,7 +22,7 @@ export class TaskService {
   constructor(private http: HttpClient) { }
 
   // Resource Methods
-  addResource(command: AddResourceCommand): Observable<void> {
+  addResource(command: FormData): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/resource/add`, command, { headers: this.getAuthHeaders() });
   }
 

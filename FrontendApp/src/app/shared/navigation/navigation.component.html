@@ -3,13 +3,23 @@
     <button class="close-button" (click)="closeNavigation()">✖</button>
   </div>
   <div class="big-button-container">
-    <button class="big-button" (click)="navigateToHome()">Текст</button>
+    <button class="big-button" (click)="navigateToHome()">Casuaris</button>
+  </div>
+
+  <div class="button-container">
+    <p>Actions</p>
+    <button (click)="navigateToProfile()">Profile</button>
+    <button (click)="navigateToInvites()">Invites</button>
+    <button (click)="navigateToTeams()">Teams</button>
   </div>
 
   <div class="button-container">
     <p>Companies</p>
+    <button class="add-company-button" (click)="openAddCompanyModal('add-company-modal')">+ Add Company</button>
     <button *ngFor="let company of companies" (click)="selectCompany(company)">
       {{ company.name }}
     </button>
   </div>
 </div>
+
+<app-add-company-modal></app-add-company-modal>

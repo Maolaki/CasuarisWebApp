@@ -24,10 +24,10 @@ namespace UnionService.Application.UseCases
                 LogoData = ConvertToByteArray(request.imageFile)
             };
 
-            var user = await _unitOfWork.Users.GetAsync(u => u.Id == request.userId);
+            var user = await _unitOfWork.Users.GetAsync(u => u.Username == request.username);
             if (user == null)
             {
-                throw new ArgumentException($"User with Id {request.userId} does not exist.");
+                throw new ArgumentException($"User with name {request.username} does not exist.");
             }
 
             _unitOfWork.Companies.Create(company);

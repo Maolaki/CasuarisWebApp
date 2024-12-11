@@ -22,6 +22,17 @@ import { FormsModule } from '@angular/forms';
 import { TaskInfoComponent } from './pages/task-info/task-info.component';
 import { ErrorInterceptor } from './error.interceptor';
 import { ErrorModalComponent } from './shared/error-modal/error-modal.component';
+import { TeamDescriptionModalComponent } from './shared/team-description-modal/team-description-modal.component';
+import { InvitationDescriptionModalComponent } from './shared/invitation-description-modal/invitation-description-modal.component';
+import { AddTeamModalComponent } from './shared/add-team-modal/add-team-modal.component';
+import { AddInvitationModalComponent } from './shared/add-invitation-modal/add-invitation-modal.component';
+import { AddCompanyModalComponent } from './shared/add-company-modal/add-company-modal.component';
+import { AddTaskModalComponent } from './shared/add-task-modal/add-task-modal.component';
+import { AddResourceModalComponent } from './shared/add-resource-modal/add-resource-modal.component';
+import { CompanySettingsComponent } from './pages/company-settings/company-settings.component';
+import { CompanyMembersComponent } from './pages/company-members/company-members.component';
+import { CompanyMemberComponent } from './shared/company-member/company-member.component';
+import { CompanyMemberInfoModalComponent } from './shared/company-member-info-modal/company-member-info-modal.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +46,6 @@ import { ErrorModalComponent } from './shared/error-modal/error-modal.component'
     AuthorizationComponent,
     TaskInfoComponent,
 
-
     HeaderComponent,
     NavigationComponent,
     InviteButtonComponent,
@@ -43,6 +53,17 @@ import { ErrorModalComponent } from './shared/error-modal/error-modal.component'
     TeamButtonComponent,
     TaskButtonComponent,
     ErrorModalComponent,
+    TeamDescriptionModalComponent,
+    InvitationDescriptionModalComponent,
+    AddTeamModalComponent,
+    AddInvitationModalComponent,
+    AddCompanyModalComponent,
+    AddTaskModalComponent,
+    AddResourceModalComponent,
+    CompanySettingsComponent,
+    CompanyMembersComponent,
+    CompanyMemberComponent,
+    CompanyMemberInfoModalComponent,
   ],
   imports: [
     BrowserModule,

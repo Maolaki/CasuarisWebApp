@@ -6,6 +6,7 @@ import { GetCompaniesQuery } from '../../models/queries/unionservice/get-compani
 import { UnionService } from '../../services/api-services/union.service';
 import { NavigationStateService } from '../../services/navigation-state.service';
 import { GetCompanyRoleQuery } from '../../models/queries/unionservice/get-company-role.query';
+import { ModalService } from '../../services/modal-service.service';
 
 @Component({
   selector: 'app-navigation',
@@ -14,16 +15,19 @@ import { GetCompanyRoleQuery } from '../../models/queries/unionservice/get-compa
 })
 export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
   private navSubscription!: Subscription;
-  isNavigationOpen = false;
-  @Input() isAuthorized!: boolean;
-
-  companies: CompanyDTO[] = [];
   private companiesSubscription!: Subscription;
+
+  isNavigationOpen = false;
+  isAddCompanyModalOpen = false;
+
+  @Input() isAuthorized!: boolean;
+  companies: CompanyDTO[] = [];
 
   constructor(
     private navigationService: NavigationStateService,
     private router: Router,
-    private unionService: UnionService
+    private unionService: UnionService,
+    private modalService: ModalService
   ) { }
 
   ngOnInit(): void {
@@ -34,21 +38,14 @@ export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['isAuthorized']) {
-      if (this.isAuthorized) {
-        this.loadCompanies();
-      }
+    if (changes['isAuthorized'] && this.isAuthorized) {
+      this.loadCompanies();
     }
   }
 
   ngOnDestroy(): void {
-    if (this.companiesSubscription) {
-      this.companiesSubscription.unsubscribe();
-    }
-
-    if (this.navSubscription) {
-      this.navSubscription.unsubscribe();
-    }
+    this.navSubscription?.unsubscribe();
+    this.companiesSubscription?.unsubscribe();
   }
 
   closeNavigation(): void {
@@ -84,12 +81,8 @@ export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
     };
 
     this.companiesSubscription = this.unionService.getCompanies(query).subscribe({
-      next: (companies) => {
-        this.companies = companies;
-      },
-      error: (err) => {
-        console.error('Failed to load companies', err);
-      }
+      next: (companies) => (this.companies = companies),
+      error: (err) => console.error('Failed to load companies', err)
     });
   }
 
@@ -103,14 +96,35 @@ export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
 
     this.unionService.getCompanyRole(query).subscribe({
       next: (role) => {
+        this.closeNavigation();
         localStorage.setItem('companyRole', role.toString());
-
         this.router.navigate(['/all-tasks']);
+       // window.location.reload();
       },
-      error: (err) => {
-        console.error('Failed to load company role', err);
-      }
+      error: (err) => console.error('Failed to load company role', err)
     });
   }
 
+  openAddCompanyModal(modalId: string) {
+    this.modalService.openModal(modalId);
+  }
+
+  closeModal(modalId: string) {
+    this.modalService.closeModal(modalId);
+  }
+
+  navigateToProfile(): void {
+    this.closeNavigation();
+    this.router.navigate(['/profile']);
+  }
+
+  navigateToInvites(): void {
+    this.closeNavigation();
+    this.router.navigate(['/invites']);
+  }
+
+  navigateToTeams(): void {
+    this.closeNavigation();
+    this.router.navigate(['/teams']);
+  }
 }

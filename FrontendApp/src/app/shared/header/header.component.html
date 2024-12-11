@@ -4,14 +4,30 @@
      [class.page-profile]="currentPage === 'profile'"
      [class.page-registration]="currentPage === 'registration'"
      [class.page-authorization]="currentPage === 'authorization'">
-  <button *ngIf="isAuthorized" class="navigation-button" 
-          [class.navigation-open]="isNavigationOpen"
-          [class.navigation-close]="!isNavigationOpen"
-          [class.page-registration]="currentPage === 'registration'"
-          [class.page-authorization]="currentPage === 'authorization'"
-          (click)="toggleNavigation()">☰</button>
-  <div class="log-reg-container" *ngIf="currentPage !== 'register'">
-    <button class="log-reg-button" (click)="toggleNavigation()">Reg In</button>
-    <button class="log-reg-button" (click)="toggleNavigation()">Log In</button>
+  <div class="navigation-buttons">
+    <button *ngIf="isAuthorized" class="navigation-button" 
+        [class.navigation-open]="isNavigationOpen"
+        [class.navigation-close]="!isNavigationOpen"
+        [class.page-registration]="currentPage === 'registration'"
+        [class.page-authorization]="currentPage === 'authorization'"
+        (click)="toggleNavigation()">☰</button>
+<button *ngIf="!isAuthorized && currentPage === 'authorization' || !isAuthorized && currentPage === 'registration'"
+        class="log-reg-button" (click)="navigateTo('home')">Home</button>
+
+<button *ngIf="isAuthorized && currentPage === 'all-tasks' || isAuthorized && currentPage === 'company-settings'"
+      class="log-reg-button" (click)="navigateTo('all-tasks')">Tasks</button>
+<button *ngIf="isAuthorized && companyRole === 0 && currentPage === 'all-tasks' || isAuthorized && currentPage === 'company-settings'"
+      class="log-reg-button" (click)="navigateTo('company-settings')">Settings</button>
+<button *ngIf="isAuthorized && companyRole === 0  && currentPage === 'all-tasks' || isAuthorized && currentPage === 'company-settings'"
+      class="log-reg-button" (click)="navigateTo('company-members')">Members</button>
+  </div>
+
+  <div class="log-reg-container">
+    <button class="log-reg-button" (click)="toggleTheme()">Switch Theme</button>
+
+    <button *ngIf="!isAuthorized && currentPage !== 'registration'" class="log-reg-button" (click)="navigateTo('registration')">Reg In</button>
+    <button *ngIf="!isAuthorized && currentPage !== 'authorization'" class="log-reg-button" (click)="navigateTo('authorization')">Log In</button>
+
+    <button *ngIf="isAuthorized" class="log-reg-button" (click)="logout()">Log Out</button>
   </div>
 </div>

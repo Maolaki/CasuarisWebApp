@@ -29,24 +29,47 @@
   <div class="grid-item"></div>
   <div class="grid-item content-box" [class.details-active]="isDetailsVisible" [class.subtasks-active]="isSubtasksVisible">
     <div *ngIf="isDetailsVisible" class="resources">
-      <div *ngFor="let resource of task?.resources; let first = first; let last = last"
+      <div *ngFor="let resource of task?.resources; let first = first"
            [class.no-top-border]="first"
-           [class.no-bottom-border]="last"
            class="resource-item">
-        <ng-container *ngIf="resource.resourceType === resourceType.text">
+        <div *ngIf="resource.type == 0">
           <p>{{ resource.data }}</p>
-        </ng-container>
+        </div>
 
-        <ng-container *ngIf="resource.resourceType === resourceType.image">
-          <img *ngIf="resource.imageFile" [src]="resource.imageFile" alt="Resource Image" />
-        </ng-container>
+        <div *ngIf="resource.type == 1">
+          <img *ngIf="resource.imageFileUrl; else noImage" [src]="resource.imageFileUrl" alt="Resource Image" />
+          <ng-template #noImage>
+            <div class="empty-image">Нет изображения</div>
+          </ng-template>
+        </div>
+
+        <button *ngIf="companyRole == 0 || companyRole == 1" class="remove-resource-button"
+                (click)="removeResource(resource.id)">
+          Удалить
+        </button>
       </div>
+
+      <button class="task-button add-resource-button" (click)="openAddResourceModal('add-resource-modal')">
+        <div class="task-header">
+          <span class="task-name">+</span>
+        </div>
+      </button>
     </div>
 
     <div *ngIf="isSubtasksVisible" class="tasks-grid">
+      <div class="center-button">
+        <div class="task-button add-task-button" (click)="openAddTaskModal()">
+          <div class="task-header">
+            <span class="task-name">+</span>
+          </div>
+        </div>
+      </div>
       <app-task-button *ngFor="let subtask of task?.childTasks" [task]="subtask"></app-task-button>
     </div>
-  </div>
 
-  <div class="grid-item"></div>
+    <div class="grid-item"></div>
+  </div>
 </div>
+
+<app-add-resource-modal></app-add-resource-modal>
+<app-add-task-modal></app-add-task-modal>

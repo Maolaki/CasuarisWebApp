@@ -1,5 +1,5 @@
 <div class="profile-container" [class.navigation-open]="isNavigationOpen">
-  <!-- Новая строка для фильтрации -->
+
   <div class="grid-item"></div>
   <div class="grid-item">
     <div class="filter-container">
@@ -14,13 +14,21 @@
   </div>
   <div class="grid-item"></div>
 
-  <!-- Основное содержимое -->
   <div class="grid-item"></div>
   <div class="grid-item">
     <div class="tasks-grid">
+      <div class="center-button">
+        <div class="task-button add-task-button" (click)="openAddTaskModal('add-task-modal')">
+          <div class="task-header">
+            <span class="task-name">+</span>
+          </div>
+        </div>
+      </div>
+
+
       <app-task-button *ngFor="let task of paginatedTasks" [task]="task"></app-task-button>
     </div>
-  </div>
+    </div>
   <div class="grid-item"></div>
   <div class="grid-item"></div>
   <div class="grid-item">
@@ -32,3 +40,5 @@
   </div>
   <div class="grid-item"></div>
 </div>
+
+<app-add-task-modal></app-add-task-modal>
