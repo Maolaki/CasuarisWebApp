@@ -10,8 +10,11 @@ namespace UnionService.Application.UseCases
             RuleFor(x => x.username)
                 .NotEmpty().WithMessage("Username should not be empty.");
 
-            RuleFor(x => x.userId)
-                .GreaterThan(0).WithMessage("UserId must be greater than 0.");
+            RuleFor(x => x.companyId)
+                .GreaterThan(0).WithMessage("CompanyId must be greater than 0.");
+
+            RuleFor(x => x.memberUsername)
+                .NotEmpty().WithMessage("Member username should not be empty.");
 
             RuleFor(x => x.description)
                 .MaximumLength(500).WithMessage("Description must not exceed 500 characters.")
@@ -19,9 +22,6 @@ namespace UnionService.Application.UseCases
 
             RuleFor(x => x.type)
                 .IsInEnum().WithMessage("Type must be a valid InvitationType.");
-
-            RuleFor(x => x.companyId)
-                .GreaterThan(0).WithMessage("CompanyId must be greater than 0.");
 
             RuleFor(x => x.role)
                 .IsInEnum().WithMessage("Role must be enum.")

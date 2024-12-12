@@ -5,6 +5,9 @@ import { RegisterUserCommand } from '../../models/commands/authservice/register-
 import { AuthenticatedDTO } from '../../models/dtos/authenticated.dto';
 import { AuthenticateUserQuery } from '../../models/queries/authservice/authenticate-user.query';
 import { RefreshTokenCommand } from '../../models/commands/authservice/refresh-token.command';
+import { UserInfoDTO } from '../../models/dtos/user-info.dto';
+import { GetUserInfoQuery } from '../../models/queries/authservice/get-user-info.query';
+import { UpdateUserCommand } from '../../models/commands/authservice/update-user.command';
 
 
 @Injectable({
@@ -13,6 +16,7 @@ import { RefreshTokenCommand } from '../../models/commands/authservice/refresh-t
 export class AuthService {
   private authApiUrl = 'https://localhost:7001/auth';
   private tokenApiUrl = 'https://localhost:7001/token';
+  private userApiUrl = 'https://localhost:7001/user';
 
   constructor(private http: HttpClient) { }
 
@@ -33,11 +37,20 @@ export class AuthService {
   }
 
   revokeToken(refreshToken: string): Observable<void> {
-    return this.http.post<void>(`${this.tokenApiUrl}/revoke`, { refreshToken }, { headers: this.getAuthHeaders() });
+    const headers = this.getAuthHeaders().set('Content-Type', 'application/json');
+    return this.http.post<void>(`${this.tokenApiUrl}/revoke`, JSON.stringify(refreshToken), { headers });
   }
 
   revokeAllTokens(): Observable<void> {
     return this.http.post<void>(`${this.tokenApiUrl}/revoke-all`, {}, { headers: this.getAuthHeaders() });
+  }
+
+  getUserInfo(query: GetUserInfoQuery): Observable<UserInfoDTO> {
+    return this.http.post<UserInfoDTO>(`${this.userApiUrl}/get-info`, query, { headers: this.getAuthHeaders() });
+  }
+
+  updateUser(command: UpdateUserCommand): Observable<void> {
+    return this.http.post<void>(`${this.userApiUrl}/update-user`, command, { headers: this.getAuthHeaders() });
   }
 
   private getAuthHeaders(): HttpHeaders {

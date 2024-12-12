@@ -6,7 +6,7 @@ import { ModalService } from '../../services/modal-service.service';
 @Component({
   selector: 'app-company-member-info-modal',
   templateUrl: './company-member-info-modal.component.html',
-  styleUrl: './company-member-info-modal.component.css'
+  styleUrls: ['./company-member-info-modal.component.css', '../../../styles/modal.css']
 })
 export class CompanyMemberInfoModalComponent implements OnInit {
   private modalId = 'company-member-info-modal';

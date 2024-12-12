@@ -78,12 +78,20 @@ namespace StatisticsService.Application.UseCases
         }
 
         private void GeneratePdf(Stream stream, Company company, IEnumerable<PerformerInCompany> performers,
-                         IEnumerable<BaseTaskInfo> tasks, decimal totalSalaryCosts, int completedTaskCount,
-                         decimal totalTaskBudget, decimal profitOrLoss, DateTime startDate, DateTime endDate)
+                             IEnumerable<BaseTaskInfo> tasks, decimal totalSalaryCosts, int completedTaskCount,
+                             decimal totalTaskBudget, decimal profitOrLoss, DateTime startDate, DateTime endDate)
         {
             var totalPerformers = performers.Count();
             var owners = company.Owners?.Count ?? 0;
             var managers = company.Managers?.Count ?? 0;
+
+            // Calculate underworked performers
+            var underworkedPerformers = performers.Select(p => {
+                var workLogs = p.WorkLogs?.Where(w => w.WorkDate >= startDate && w.WorkDate <= endDate) ?? Enumerable.Empty<WorkLog>();
+                var totalWorkedHours = workLogs.Sum(w => w.HoursWorked.TotalHours);
+                var expectedHours = ((endDate - startDate).Days / 7.0) * p.WorkDays * p.WorkHours;
+                return new { Performer = p, UnderworkedHours = expectedHours - totalWorkedHours };
+            }).Where(p => p.UnderworkedHours > 0).ToList();
 
             QuestPDF.Fluent.Document.Create(container =>
             {
@@ -99,6 +107,7 @@ namespace StatisticsService.Application.UseCases
 
                     page.Content().Column(col =>
                     {
+                        // Overview section
                         col.Item().Row(row =>
                         {
                             row.RelativeItem(2).Column(innerCol =>
@@ -112,6 +121,7 @@ namespace StatisticsService.Application.UseCases
                             row.RelativeItem().Image(GeneratePieChartAsBytes(owners, managers, totalPerformers - owners - managers));
                         });
 
+                        // Summary table
                         col.Item().Text("Statistics Summary").FontSize(16).SemiBold();
 
                         col.Item().Table(table =>
@@ -134,6 +144,70 @@ namespace StatisticsService.Application.UseCases
                             table.Cell().Text("Profit/Loss");
                             table.Cell().Text($"{profitOrLoss:C}");
                         });
+
+                        // Task table
+                        col.Item().Text("Completed Tasks and Subtasks").FontSize(16).SemiBold();
+                        col.Item().Table(table =>
+                        {
+                            table.ColumnsDefinition(columns =>
+                            {
+                                columns.RelativeColumn();
+                                columns.RelativeColumn();
+                            });
+
+                            table.Cell().Text("Task Name").Bold();
+                            table.Cell().Text("Budget").Bold();
+
+                            foreach (var task in tasks)
+                            {
+                                table.Cell().Text(task.Name);
+                                table.Cell().Text($"{task.Budget:C}");
+                            }
+                        });
+
+                        // Underworked performers table
+                        col.Item().Text("Underworked Performers").FontSize(16).SemiBold();
+                        col.Item().Table(table =>
+                        {
+                            table.ColumnsDefinition(columns =>
+                            {
+                                columns.RelativeColumn();
+                                columns.RelativeColumn();
+                            });
+
+                            table.Cell().Text("Performer Name").Bold();
+                            table.Cell().Text("Underworked Hours").Bold();
+
+                            foreach (var entry in underworkedPerformers)
+                            {
+                                table.Cell().Text(entry.Performer.User?.Username);
+                                table.Cell().Text(entry.UnderworkedHours.ToString("F2"));
+                            }
+                        });
+
+                        // Salaries table
+                        col.Item().Text("Salaries for the Period").FontSize(16).SemiBold();
+                        col.Item().Table(table =>
+                        {
+                            table.ColumnsDefinition(columns =>
+                            {
+                                columns.RelativeColumn();
+                                columns.RelativeColumn();
+                            });
+
+                            table.Cell().Text("Performer Name").Bold();
+                            table.Cell().Text("Salary").Bold();
+
+                            foreach (var performer in performers)
+                            {
+                                var workLogs = performer.WorkLogs?.Where(w => w.WorkDate >= startDate && w.WorkDate <= endDate) ?? Enumerable.Empty<WorkLog>();
+                                var totalWorkedHours = workLogs.Sum(w => w.HoursWorked.TotalHours);
+                                var salaryForPeriod = performer.Salary * (decimal)(totalWorkedHours / performer.WorkHours);
+
+                                table.Cell().Text(performer.User?.Username);
+                                table.Cell().Text($"{salaryForPeriod:C}");
+                            }
+                        });
                     });
 
                     page.Footer()
@@ -152,7 +226,7 @@ namespace StatisticsService.Application.UseCases
             var total = owners + managers + performers;
             var startAngle = 0f;
 
-            void DrawSegment(SKColor color, float percentage)
+            void DrawSegment(SKColor color, float percentage, string label)
             {
                 var paint = new SKPaint { Color = color, IsAntialias = true, Style = SKPaintStyle.Fill };
                 var sweepAngle = 360 * percentage;
@@ -160,12 +234,25 @@ namespace StatisticsService.Application.UseCases
                 var rect = new SKRect(50, 50, 350, 350);
                 canvas.DrawArc(rect, startAngle, sweepAngle, true, paint);
 
+                // Add labels
+                var midAngle = startAngle + sweepAngle / 2;
+                var radius = 150;
+                var x = 200 + radius * Math.Cos(midAngle * Math.PI / 180);
+                var y = 200 + radius * Math.Sin(midAngle * Math.PI / 180);
+
+                canvas.DrawText(label, (float)x, (float)y, new SKPaint
+                {
+                    Color = SKColors.Black,
+                    IsAntialias = true,
+                    TextSize = 14
+                });
+
                 startAngle += sweepAngle;
             }
 
-            DrawSegment(SKColors.Blue, (float)owners / total);
-            DrawSegment(SKColors.Green, (float)managers / total);
-            DrawSegment(SKColors.Orange, (float)performers / total);
+            DrawSegment(SKColors.Blue, (float)owners / total, $"Owners: {owners}");
+            DrawSegment(SKColors.Green, (float)managers / total, $"Managers: {managers}");
+            DrawSegment(SKColors.Orange, (float)performers / total, $"Performers: {performers}");
 
             canvas.Flush();
 

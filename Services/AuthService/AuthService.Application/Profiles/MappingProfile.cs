@@ -4,12 +4,11 @@ using AuthService.Domain.Entities;
 
 namespace AuthService.Application.Profiles
 {
-    public class MappingProfile : Profile
+    public class UserToUserDTOProfile : Profile
     {
-        public MappingProfile()
+        public UserToUserDTOProfile()
         {
-            CreateMap<UserDTO, User>()
-                        .ForMember(dest => dest.HashedPassword, opt => opt.MapFrom(src => src.Password));
+            CreateMap<UserDTO, User>().ReverseMap();
         }
     }
 }

@@ -26,6 +26,7 @@ import { CompanyRole } from '../../enums/company-role.enum';
 import { GetCompanyRoleQuery } from '../../models/queries/unionservice/get-company-role.query';
 import { CompanyMemberDTO } from '../../models/dtos/company-member.dto';
 import { GetCompanyMembersQuery } from '../../models/queries/unionservice/get-company-members.dto';
+import { UpdateCompanyMemberCommand } from '../../models/commands/unionservice/update-company-member.command';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +52,10 @@ export class UnionService {
 
   updateCompany(command: UpdateCompanyCommand): Observable<void> {
     return this.http.put<void>(`${this.apiUrl}/company/update`, command, { headers: this.getAuthHeaders() });
+  }
+
+  updateCompanyMember(command: UpdateCompanyMemberCommand): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/company/update-member`, command, { headers: this.getAuthHeaders() });
   }
 
   removeCompany(command: RemoveCompanyCommand): Observable<void> {

@@ -3,8 +3,8 @@ import { NavigationStateService } from '../../services/navigation-state.service'
 import { Subscription } from 'rxjs';
 import { InvitationDTO } from '../../models/dtos/invitation.dto';
 import { UnionService } from '../../services/api-services/union.service';
-import { InvitationType } from '../../enums/invitation-type.enum';
 import { CompanyRole } from '../../enums/company-role.enum';
+import { GetInvitationQuery } from '../../models/queries/unionservice/get-invitation.query';
 
 @Component({
   selector: 'app-invites',
@@ -40,39 +40,49 @@ export class InvitesComponent implements OnInit, OnDestroy {
   }
 
   loadInvites(): void {
-    //const query = {
-    //  username: null,
-    //  pageNumber: this.currentPage,
-    //  pageSize: this.pageSize
-    //};
+    const query: GetInvitationQuery = {
+      username: localStorage.getItem('username'),
+      pageNumber: 1,
+      pageSize: 1000
+    };
 
-    //this.unionService.getInvitations(query).subscribe((invitations) => {
-    //  this.invites = invitations;
-    //  this.paginate();
-    //});
+    this.unionService.getInvitations(query).subscribe(
+      (invitations) => {
+        this.invites = invitations;
+        this.paginate();
+      },
+      (error) => {
+        console.error('Ошибка при загрузке приглашений:', error);
+      }
+    );
+  }
 
-    this.invites = Array.from({ length: 50 }, (_, i) => ({
-      id: i + 1,
-      description: `Invite to join Company ${i + 1}`,
-      companyId: i + 1,
-      companyRole: this.getRandomCompanyRole(),
-      teamId: i % 3 === 0 ? i + 1 : null,
-      type: i % 2 === 0 ? InvitationType.company : InvitationType.team
-    }));
+  paginate(): void {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedInvites = this.invites.slice(startIndex, endIndex);
+  }
 
+  onPageChange(page: number): void {
+    this.currentPage = page;
     this.paginate();
   }
 
-  // Функция для генерации случайной роли компании для тестирования
-  getRandomCompanyRole(): CompanyRole {
-    const roles: CompanyRole[] = [CompanyRole.owner, CompanyRole.manager, CompanyRole.performer];
-    return roles[Math.floor(Math.random() * roles.length)];
+  @HostListener('window:resize', ['$event'])
+  onResize(): void {
+    this.updatePageSize();
   }
 
-  // Функция для генерации случайного типа приглашения для тестирования
-  getRandomInvitationType(): InvitationType {
-    const types: InvitationType[] = [InvitationType.company, InvitationType.team];
-    return types[Math.floor(Math.random() * types.length)];
+  updatePageSize(): void {
+    const width = window.innerWidth;
+    if (width < 600) {
+      this.pageSize = 10;
+    } else if (width < 1200) {
+      this.pageSize = 15;
+    } else {
+      this.pageSize = 20;
+    }
+    this.paginate();
   }
 
   getCompanyRoleString(role: CompanyRole): string {
@@ -86,35 +96,5 @@ export class InvitesComponent implements OnInit, OnDestroy {
       default:
         return 'Unknown';
     }
-  }
-  // -----------------------------------------------------------
-
-  paginate(): void {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    this.paginatedInvites = this.invites.slice(startIndex, endIndex);
-  }
-
-  onPageChange(page: number): void {
-    this.currentPage = page;
-    this.paginate();
-    this.loadInvites();
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(): void {
-    this.updatePageSize();
-  }
-
-  updatePageSize(): void {
-    const width = window.innerWidth;
-    if (width < 600) {
-      this.pageSize = 10; 
-    } else if (width < 1200) {
-      this.pageSize = 15;
-    } else {
-      this.pageSize = 20;
-    }
-    this.paginate();
   }
 }

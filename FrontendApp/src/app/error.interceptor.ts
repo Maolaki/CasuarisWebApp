@@ -11,10 +11,12 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { AuthService } from './services/api-services/auth.service';
 import { ModalService } from './services/modal-service.service';
+import { NavigationStateService } from './services/navigation-state.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
   constructor(
+    private navigationService: NavigationStateService,
     private authService: AuthService,
     private router: Router,
     private modalService: ModalService
@@ -46,6 +48,8 @@ export class ErrorInterceptor implements HttpInterceptor {
           } else {
             this.handleAuthError();
           }
+        } else {
+          this.handleGeneralError(error);
         }
 
         return throwError(error);
@@ -54,11 +58,21 @@ export class ErrorInterceptor implements HttpInterceptor {
   }
 
   private handleAuthError(): void {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('username');
+    this.closeNavigation();
     this.router.navigate(['/home']).then(() => {
       this.modalService.setError('Произошла ошибка авторизации');
     });
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('username');
+  }
+
+  private handleGeneralError(error: HttpErrorResponse): void {
+    const message = error.error?.message || error.message || 'Произошла ошибка на сервере.';
+    this.modalService.setError(message);
+  }
+
+  closeNavigation(): void {
+    this.navigationService.toggleNavigation(false);
   }
 }

@@ -58,6 +58,7 @@ export class HeaderComponent implements OnInit {
   }
 
   private clearSession(): void {
+    this.navigationService.toggleNavigation(false);
     this.router.navigate(['/home']);
     localStorage.removeItem('username');
     localStorage.removeItem('accessToken');

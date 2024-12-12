@@ -31,6 +31,17 @@ namespace UnionService.API.Controllers
             return Ok();
         }
 
+        [HttpPost("get")]
+        [Authorize, ServiceFilter(typeof(EnsureAuthenticatedUserFilter))]
+        public async Task<IActionResult> GetInvitations([FromBody] GetInvitationsQuery query)
+        {
+            if (User.Identity!.Name != query.username)
+                return BadRequest("User is not authenticated.");
+
+            var response = await _mediator.Send(query);
+            return Ok(response);
+        }
+
         [HttpDelete("remove")]
         [Authorize, ServiceFilter(typeof(EnsureAuthenticatedUserFilter))]
         public async Task<IActionResult> RemoveInvitation([FromBody] RemoveInvitationCommand command)

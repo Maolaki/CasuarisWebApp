@@ -5,7 +5,7 @@ import { ModalService } from '../../services/modal-service.service';
 @Component({
   selector: 'app-add-company-modal',
   templateUrl: './add-company-modal.component.html',
-  styleUrls: ['./add-company-modal.component.css'],
+  styleUrls: ['./add-company-modal.component.css', '../../../styles/modal.css'],
 })
 export class AddCompanyModalComponent implements OnInit {
   private modalId = 'add-company-modal';

@@ -1,0 +1,34 @@
+<div class="modal-backdrop" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Добавить участника</h2>
+    </div>
+    <div class="modal-body">
+      <form #addMemberForm="ngForm" (ngSubmit)="onSubmit(addMemberForm)">
+
+        <div class="form-group">
+          <label for="role">Роль</label>
+          <select id="role" [(ngModel)]="addCommand.role" name="role" required class="form-control">
+            <option [ngValue]="CompanyRole.owner">Владелец</option>
+            <option [ngValue]="CompanyRole.manager">Менеджер</option>
+            <option [ngValue]="CompanyRole.performer">Исполнитель</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="memberUsername">Имя пользователя</label>
+          <input type="text" id="memberUsername" [(ngModel)]="addCommand.memberUsername" name="memberUsername" required class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <label for="description">Описание</label>
+          <textarea id="description" [(ngModel)]="addCommand.description" name="description" required class="form-control"></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" [disabled]="addMemberForm.invalid">Добавить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

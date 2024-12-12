@@ -1,0 +1,55 @@
+<div class="modal-backdrop" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Update Task</h2>
+    </div>
+
+    <div class="modal-body">
+      <form (ngSubmit)="submitForm()">
+        <div class="form-group">
+          <label for="name">Task Name</label>
+          <input id="name"
+                 [(ngModel)]="this.command.name"
+                 name="name"
+                 type="text"
+                 class="form-control"
+                 [placeholder]="userInfo.name || 'Enter task name'"
+                 required />
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description"
+                    [(ngModel)]="this.command.description"
+                    name="description"
+                    class="form-control"
+                    [placeholder]="userInfo.description || 'Enter description'"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="budget">Budget</label>
+          <input id="budget"
+                 [(ngModel)]="this.command.budget"
+                 name="budget"
+                 type="number"
+                 class="form-control"
+                 [placeholder]="userInfo.budget != null ? userInfo.budget.toString() : 'Enter budget'" />
+        </div>
+
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select id="status"
+                  [(ngModel)]="this.command.status"
+                  name="status"
+                  class="form-control">
+            <option [ngValue]="TaskStatus.todo">To Do</option>
+            <option [ngValue]="TaskStatus.inprogress">In Progress</option>
+            <option [ngValue]="TaskStatus.done">Done</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" [disabled]="!userInfo.name && !userInfo.description && !userInfo.budget">Save Changes</button>
+      </form>
+    </div>
+  </div>
+</div>

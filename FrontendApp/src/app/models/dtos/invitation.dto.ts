@@ -5,7 +5,7 @@ export interface InvitationDTO {
   id: number;
   description: string | null;
   companyId: number | null;
-  companyRole: CompanyRole | null;
+  role: CompanyRole | null;
   teamId: number | null;
   type: InvitationType | null;
 }

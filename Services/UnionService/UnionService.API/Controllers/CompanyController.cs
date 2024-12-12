@@ -28,7 +28,7 @@ namespace UnionService.API.Controllers
                 return BadRequest("User is not authenticated.");
 
             await _mediator.Send(command);
-            return Ok("Company added successfully.");
+            return Ok();
         }
 
         [HttpPut("update")]
@@ -39,7 +39,18 @@ namespace UnionService.API.Controllers
                 return BadRequest("User is not authenticated.");
 
             await _mediator.Send(command);
-            return Ok("Company updated successfully.");
+            return Ok();
+        }
+
+        [HttpPut("update-member")]
+        [Authorize, ServiceFilter(typeof(EnsureAuthenticatedUserFilter))]
+        public async Task<IActionResult> UpdateCompanyMember([FromBody] UpdateCompanyMemberCommand command)
+        {
+            if (User.Identity!.Name != command.username)
+                return BadRequest("User is not authenticated.");
+
+            await _mediator.Send(command);
+            return Ok();
         }
 
         [HttpDelete("remove")]
@@ -50,7 +61,7 @@ namespace UnionService.API.Controllers
                 return BadRequest("User is not authenticated.");
 
             await _mediator.Send(command);
-            return Ok("Company removed successfully.");
+            return Ok();
         }
 
         [HttpDelete("remove-worker")]
@@ -61,7 +72,7 @@ namespace UnionService.API.Controllers
                 return BadRequest("User is not authenticated.");
 
             await _mediator.Send(command);
-            return Ok("Worker removed from a company successfully.");
+            return Ok();
         }
 
         [HttpPost("add-worker")]
@@ -72,7 +83,7 @@ namespace UnionService.API.Controllers
                 return BadRequest("User is not authenticated.");
 
             await _mediator.Send(command);
-            return Ok("Worker added to company successfully.");
+            return Ok();
         }
 
         [HttpPost("add-datetime-checker")]
@@ -83,7 +94,7 @@ namespace UnionService.API.Controllers
                 return BadRequest("User is not authenticated.");
 
             await _mediator.Send(command);
-            return Ok("DateTime checker added to company successfully.");
+            return Ok();
         }
 
         [HttpDelete("remove-datetime-checker")]
@@ -94,7 +105,7 @@ namespace UnionService.API.Controllers
                 return BadRequest("User is not authenticated.");
 
             await _mediator.Send(command);
-            return Ok("DateTime checker removed successfully.");
+            return Ok();
         }
 
         [HttpPost("get-companies")]

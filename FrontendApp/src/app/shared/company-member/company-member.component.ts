@@ -2,6 +2,8 @@ import { Component, Input } from '@angular/core';
 import { CompanyRole } from '../../enums/company-role.enum';
 import { CompanyMemberDTO } from '../../models/dtos/company-member.dto';
 import { ModalService } from '../../services/modal-service.service';
+import { RemoveCompanyWorkerCommand } from '../../models/commands/unionservice/remove-company-worker.command';
+import { UnionService } from '../../services/api-services/union.service';
 
 @Component({
   selector: 'app-company-member',
@@ -13,7 +15,10 @@ export class CompanyMemberComponent {
   @Input() currentUserRole!: CompanyRole;
   companyRole = CompanyRole;
 
-  constructor(private modalService: ModalService) { }
+  constructor(
+    private modalService: ModalService,
+    private unionService: UnionService
+  ) { }
 
   getRoleName(role: CompanyRole): string {
     switch (role) {
@@ -40,10 +45,30 @@ export class CompanyMemberComponent {
   }
 
   onChange() {
-    console.log(`Accept button clicked for Invite ID: ${this.companyMember.id}`);
+    this.modalService.openModal('company-member-update-modal', {
+      memberId: this.companyMember.id,
+      salary: this.companyMember.salary,
+      workHours: this.companyMember.workHours,
+      workDays: this.companyMember.workDays
+    });
   }
 
   onDelete() {
-    console.log(`Decline button clicked for Invite ID: ${this.companyMember.id}`);
+    const command: RemoveCompanyWorkerCommand = {
+      username: localStorage.getItem('username'),
+      companyId: Number(localStorage.getItem('companyId')) || null,
+      userId: this.companyMember.id,
+      role: this.companyMember.companyRole
+    };
+
+    this.unionService.removeCompanyWorker(command).subscribe({
+      next: () => {
+        console.log('Company member successfully removed.');
+        location.reload();
+      },
+      error: (err) => {
+        console.error('Failed to remove company member:', err);
+      }
+    });
   }
 }

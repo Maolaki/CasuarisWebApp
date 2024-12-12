@@ -1,6 +1,9 @@
 <div class="grid-container" [class.navigation-open]="isNavigationOpen">
   <div class="grid-item"></div>
   <div class="grid-item">
+
+    <button (click)="openAddMemberModal()">Add Member</button>
+
     <div class="row" *ngFor="let member of companyMembers">
       <app-company-member [companyMember]="member"
                           [currentUserRole]="currentUserRole">
@@ -11,3 +14,5 @@
 </div>
 
 <app-company-member-info-modal></app-company-member-info-modal>
+<app-company-member-update-modal></app-company-member-update-modal>
+<app-company-member-add-modal></app-company-member-add-modal>

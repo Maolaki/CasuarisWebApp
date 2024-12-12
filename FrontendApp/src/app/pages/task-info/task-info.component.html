@@ -13,6 +13,17 @@
     <div class="info-block">
       <p>{{ task?.description }}</p>
     </div>
+
+    <div class="task-info-action">
+      <button class="log-reg-button" (click)="openUpdateTaskModal()">
+        Update Task
+      </button>
+
+      <button class="log-reg-button" (click)="removeTask()">
+        Remove Task
+      </button>
+    </div>
+
     <div class="task-buttons">
       <button (click)="showDetails()"
               [class.active]="isDetailsVisible">
@@ -73,3 +84,4 @@
 
 <app-add-resource-modal></app-add-resource-modal>
 <app-add-task-modal></app-add-task-modal>
+<app-task-update-modal></app-task-update-modal>

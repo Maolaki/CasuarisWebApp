@@ -1,0 +1,16 @@
+<div class="modal-backdrop" *ngIf="isVisible" (click)="closeModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h2>Invite Description</h2>
+    </div>
+
+    <div class="modal-body">
+      <p *ngIf="description; else noDescription">{{ description }}</p>
+      <ng-template #noDescription>
+        <p>No description available.</p>
+      </ng-template>
+    </div>
+
+  </div>
+</div>

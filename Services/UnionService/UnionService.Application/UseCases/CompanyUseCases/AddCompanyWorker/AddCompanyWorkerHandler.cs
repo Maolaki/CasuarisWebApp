@@ -27,10 +27,10 @@ namespace UnionService.Application.UseCases
             if (!await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!))
                 throw new ArgumentException("User have no permission");
 
-            var existingUser = await _unitOfWork.Users.GetAsync(u => u.Id == request.userId);
+            var existingUser = await _unitOfWork.Users.GetAsync(u => u.Username == request.memberUsername);
             if (existingUser == null)
             {
-                throw new ArgumentException($"User with Id {request.userId} does not exist.");
+                throw new ArgumentException($"User with Id {request.memberUsername} does not exist.");
             }
 
             switch (request.role)

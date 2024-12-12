@@ -53,7 +53,7 @@ namespace UnionService.Application.UseCases
                     break;
 
                 case CompanyRole.performer:
-                    var performerToRemove = existingCompany.Performers?.FirstOrDefault(u => u.UserId == request.userId);
+                    var performerToRemove = existingCompany.Performers?.FirstOrDefault(u => u.Id == request.userId);
                     if (existingCompany.Performers is not null && performerToRemove != null)
                     {
                         existingCompany.Performers.Remove(performerToRemove);

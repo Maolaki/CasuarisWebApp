@@ -23,9 +23,7 @@ import { TaskInfoComponent } from './pages/task-info/task-info.component';
 import { ErrorInterceptor } from './error.interceptor';
 import { ErrorModalComponent } from './shared/error-modal/error-modal.component';
 import { TeamDescriptionModalComponent } from './shared/team-description-modal/team-description-modal.component';
-import { InvitationDescriptionModalComponent } from './shared/invitation-description-modal/invitation-description-modal.component';
 import { AddTeamModalComponent } from './shared/add-team-modal/add-team-modal.component';
-import { AddInvitationModalComponent } from './shared/add-invitation-modal/add-invitation-modal.component';
 import { AddCompanyModalComponent } from './shared/add-company-modal/add-company-modal.component';
 import { AddTaskModalComponent } from './shared/add-task-modal/add-task-modal.component';
 import { AddResourceModalComponent } from './shared/add-resource-modal/add-resource-modal.component';
@@ -33,6 +31,11 @@ import { CompanySettingsComponent } from './pages/company-settings/company-setti
 import { CompanyMembersComponent } from './pages/company-members/company-members.component';
 import { CompanyMemberComponent } from './shared/company-member/company-member.component';
 import { CompanyMemberInfoModalComponent } from './shared/company-member-info-modal/company-member-info-modal.component';
+import { CompanyMemberUpdateModalComponent } from './shared/company-member-update-modal/company-member-update-modal.component';
+import { CompanyMemberAddModalComponent } from './shared/company-member-add-modal/company-member-add-modal.component';
+import { InviteDescriptionModalComponent } from './shared/invite-description-modal/invite-description-modal.component';
+import { ProfileChangeModalComponent } from './shared/profile-change-modal/profile-change-modal.component';
+import { TaskUpdateModalComponent } from './shared/task-update-modal/task-update-modal.component';
 
 @NgModule({
   declarations: [
@@ -54,9 +57,7 @@ import { CompanyMemberInfoModalComponent } from './shared/company-member-info-mo
     TaskButtonComponent,
     ErrorModalComponent,
     TeamDescriptionModalComponent,
-    InvitationDescriptionModalComponent,
     AddTeamModalComponent,
-    AddInvitationModalComponent,
     AddCompanyModalComponent,
     AddTaskModalComponent,
     AddResourceModalComponent,
@@ -64,6 +65,11 @@ import { CompanyMemberInfoModalComponent } from './shared/company-member-info-mo
     CompanyMembersComponent,
     CompanyMemberComponent,
     CompanyMemberInfoModalComponent,
+    CompanyMemberUpdateModalComponent,
+    CompanyMemberAddModalComponent,
+    InviteDescriptionModalComponent,
+    ProfileChangeModalComponent,
+    TaskUpdateModalComponent,
   ],
   imports: [
     BrowserModule,

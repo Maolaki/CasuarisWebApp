@@ -81,7 +81,9 @@
 
 .center-button {
   display: flex;
-  width: 100%;
+  padding: 17px;
+  width: 250px;
+  height: 142px;
   justify-content: center;
   align-items: center;
 }

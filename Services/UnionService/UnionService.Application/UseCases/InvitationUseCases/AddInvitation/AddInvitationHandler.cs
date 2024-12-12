@@ -27,17 +27,17 @@ namespace UnionService.Application.UseCases
             if (!await _accessService.HaveManagerAccessAsync(existingCompany.Id, request.username!))
                 throw new ArgumentException("User have no permission");
 
-            var existingUser = await _unitOfWork.Users.GetAsync(u => u.Id == request.userId);
+            var existingUser = await _unitOfWork.Users.GetAsync(u => u.Username == request.memberUsername);
             if (existingUser == null)
             {
-                throw new ArgumentException($"User with Id {request.userId} does not exist.");
+                throw new ArgumentException($"User with username {request.memberUsername} does not exist.");
             }
 
             if (existingCompany.Owners!.Contains(existingUser) 
                 || existingCompany.Managers!.Contains(existingUser) 
                 || existingCompany.Performers!.FirstOrDefault(p => p.User == existingUser) != null)
             {
-                throw new ArgumentException($"User with id {request.userId} already in company.");
+                throw new ArgumentException($"User with id {request.memberUsername} already in company.");
             }
 
             if (request.type == Domain.Enums.InvitationType.team)
@@ -52,7 +52,7 @@ namespace UnionService.Application.UseCases
             var invitation = new Invitation
             {
                 Description = request.description,
-                UserId = (int)request.userId!,
+                UserId = existingUser.Id,
                 CompanyId = (int)request.companyId!,
                 Role = request.role,
                 TeamId = request.teamId,

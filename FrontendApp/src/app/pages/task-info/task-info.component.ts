@@ -6,9 +6,9 @@ import { takeUntil } from 'rxjs/operators';
 import { TaskDataDTO } from '../../models/dtos/task-data.dto';
 import { TaskService } from '../../services/api-services/task.service';
 import { ModalService } from '../../services/modal-service.service';
-import { CompanyRole } from '../../enums/company-role.enum';
 import { RemoveResourceCommand } from '../../models/commands/taskservice/remove-resource.command';
 import { NavigationStateService } from '../../services/navigation-state.service';
+import { RemoveTaskCommand } from '../../models/commands/taskservice/remove-task.command';
 
 @Component({
   selector: 'app-task-info',
@@ -20,7 +20,7 @@ export class TaskInfoComponent implements OnInit, OnDestroy {
   isNavigationOpen = false;
   task: TaskDataDTO | null = null;
   companyRole = 2;
-  isDetailsVisible = false;
+  isDetailsVisible = true;
   isSubtasksVisible = false;
   private destroy$ = new Subject<void>();
 
@@ -88,10 +88,6 @@ export class TaskInfoComponent implements OnInit, OnDestroy {
     this.router.navigate(['/all-tasks']);
   }
 
-  openAddResourceModal(modalId: string): void {
-    this.modalService.openModal(modalId);
-  }
-
   showDetails(): void {
     this.isDetailsVisible = true;
     this.isSubtasksVisible = false;
@@ -107,6 +103,26 @@ export class TaskInfoComponent implements OnInit, OnDestroy {
       parentId: this.task?.id || null,
     };
     this.modalService.openModal('add-task-modal', modalData);
+  }
+
+  openAddResourceModal(modalId: string): void {
+    this.modalService.openModal(modalId);
+  }
+
+  openUpdateTaskModal(): void {
+    this.modalService.openModal('task-update-modal', this.task);
+  }
+
+  removeTask() {
+    const command: RemoveTaskCommand = {
+      username: localStorage.getItem('username'),
+      companyId: Number(localStorage.getItem('companyId')),
+      taskId: this.task?.id || null
+    };
+
+    this.taskService.removeTask(command).subscribe(() => {
+      this.router.navigate(['all-tasks']);
+    });
   }
 
   removeResource(resourceId: number): void {

@@ -8,7 +8,9 @@
       <input type="number" placeholder="Maximum budget" [(ngModel)]="filter.maxBudget" (input)="applyFilters()" />
       <select [(ngModel)]="filter.status" (change)="applyFilters()">
         <option value="">All Statuses</option>
-        <option *ngFor="let status of taskStatuses" [value]="status">{{ status }}</option>
+        <option [ngValue]="TaskStatus.todo">To Do</option>
+        <option [ngValue]="TaskStatus.inprogress">In Progress</option>
+        <option [ngValue]="TaskStatus.done">Done</option>
       </select>
     </div>
   </div>

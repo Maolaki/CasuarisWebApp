@@ -22,7 +22,7 @@ namespace AuthService
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
 
-            services.AddAutoMapper(typeof(MappingProfile));
+            services.AddAutoMapper(typeof(UserToUserDTOProfile));
 
             services.AddValidatorsFromAssembly(typeof(AuthenticateUserQueryValidator).Assembly);
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));

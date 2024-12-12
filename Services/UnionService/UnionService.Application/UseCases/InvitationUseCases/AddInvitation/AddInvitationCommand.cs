@@ -5,9 +5,9 @@ namespace UnionService.Application.UseCases
 {
     public record AddInvitationCommand(
         string? username,
-        string? description,
-        int? userId,
         int? companyId,
+        string? memberUsername,
+        string? description,
         CompanyRole? role,
         int? teamId,
         InvitationType? type

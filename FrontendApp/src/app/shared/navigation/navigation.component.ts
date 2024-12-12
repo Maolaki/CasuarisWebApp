@@ -99,7 +99,7 @@ export class NavigationComponent implements OnInit, OnDestroy, OnChanges {
         this.closeNavigation();
         localStorage.setItem('companyRole', role.toString());
         this.router.navigate(['/all-tasks']);
-       // window.location.reload();
+        //window.location.reload();
       },
       error: (err) => console.error('Failed to load company role', err)
     });

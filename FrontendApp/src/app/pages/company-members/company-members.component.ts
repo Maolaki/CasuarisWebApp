@@ -5,6 +5,7 @@ import { UnionService } from '../../services/api-services/union.service';
 import { CompanyMemberDTO } from '../../models/dtos/company-member.dto';
 import { GetCompanyMembersQuery } from '../../models/queries/unionservice/get-company-members.dto';
 import { CompanyRole } from '../../enums/company-role.enum';
+import { ModalService } from '../../services/modal-service.service';
 
 @Component({
   selector: 'app-company-members',
@@ -19,6 +20,7 @@ export class CompanyMembersComponent implements OnInit, OnDestroy {
 
   constructor(
     private navigationService: NavigationStateService,
+    private modalService: ModalService,
     private unionService: UnionService
   ) { }
 
@@ -56,5 +58,9 @@ export class CompanyMembersComponent implements OnInit, OnDestroy {
     if (this.navSubscription) {
       this.navSubscription.unsubscribe();
     }
+  }
+
+  openAddMemberModal(): void {
+    this.modalService.openModal('company-member-add-modal');
   }
 }

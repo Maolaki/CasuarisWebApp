@@ -6,7 +6,7 @@
       Team: {{ invite.teamId }}
     </span>
     <span *ngIf="invite.type === invitationType.company">
-      Role: {{ invite.companyRole }}
+      Role: {{ getRoleName(invite.role!) }}
     </span>
   </div>
   <div class="button-group">

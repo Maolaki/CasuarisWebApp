@@ -3,6 +3,9 @@ import { Subscription } from 'rxjs';
 import { NavigationStateService } from '../../services/navigation-state.service';
 import { GetCompanyStatisticsQuery } from '../../models/queries/statisticsservice/get-company-statistics.query';
 import { StatisticsService } from '../../services/api-services/statistics.service';
+import { Router } from '@angular/router';
+import { RemoveCompanyCommand } from '../../models/commands/unionservice/remove-company.command';
+import { UnionService } from '../../services/api-services/union.service';
 
 @Component({
   selector: 'app-company-settings',
@@ -15,7 +18,9 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
 
   constructor(
     private navigationService: NavigationStateService,
-    private statisticsService: StatisticsService
+    private statisticsService: StatisticsService,
+    private unionService: UnionService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -48,12 +53,25 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
     };
 
     this.statisticsService.getCompanyStatistics(query).subscribe({
-      next: () => {
-        alert('Report request sent successfully!');
-      },
       error: (err) => {
         console.error('Error fetching company statistics:', err);
-        alert('Failed to fetch company statistics.');
+      }
+    });
+  }
+
+  removeCompany(): void {
+    const username = localStorage.getItem('username');
+    const companyId = Number(localStorage.getItem('companyId'))
+
+    const command: RemoveCompanyCommand = { username, companyId };
+
+    this.unionService.removeCompany(command).subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+        localStorage.removeItem('companyId');
+      },
+      error: (err) => {
+        console.error('Error removing company:', err);
       }
     });
   }

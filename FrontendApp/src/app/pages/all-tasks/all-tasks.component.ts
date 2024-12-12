@@ -15,6 +15,7 @@ import { ModalService } from '../../services/modal-service.service';
 export class AllTasksComponent implements OnInit, OnDestroy {
   private navSubscription!: Subscription;
   isNavigationOpen = false;
+  TaskStatus = TaskStatus;
 
   tasks: TaskInfoDTO[] = [];
   filteredTasks: TaskInfoDTO[] = [];

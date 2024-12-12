@@ -5,8 +5,8 @@ namespace UnionService.Application.UseCases
 {
     public record AddCompanyWorkerCommand(
         string? username,
-        int? userId, 
-        int? companyId, 
+        int? companyId,
+        string? memberUsername,
         CompanyRole? role,
         decimal? salary,
         int? workHours, 
