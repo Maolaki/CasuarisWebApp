@@ -27,6 +27,7 @@ import { GetCompanyRoleQuery } from '../../models/queries/unionservice/get-compa
 import { CompanyMemberDTO } from '../../models/dtos/company-member.dto';
 import { GetCompanyMembersQuery } from '../../models/queries/unionservice/get-company-members.dto';
 import { UpdateCompanyMemberCommand } from '../../models/commands/unionservice/update-company-member.command';
+import { GetCompanyQuery } from '../../models/queries/unionservice/get-company.query';
 
 @Injectable({
   providedIn: 'root'
@@ -64,6 +65,10 @@ export class UnionService {
 
   getCompanies(query: GetCompaniesQuery): Observable<CompanyDTO[]> {
     return this.http.post<CompanyDTO[]>(`${this.apiUrl}/company/get-companies`, query, { headers: this.getAuthHeaders() });
+  }
+
+  getCompany(query: GetCompanyQuery): Observable<CompanyDTO> {
+    return this.http.post<CompanyDTO>(`${this.apiUrl}/company/get-company`, query, { headers: this.getAuthHeaders() });
   }
 
   getCompanyRole(query: GetCompanyRoleQuery): Observable<CompanyRole> {

@@ -6,6 +6,8 @@ import { StatisticsService } from '../../services/api-services/statistics.servic
 import { Router } from '@angular/router';
 import { RemoveCompanyCommand } from '../../models/commands/unionservice/remove-company.command';
 import { UnionService } from '../../services/api-services/union.service';
+import { GetCompanyQuery } from '../../models/queries/unionservice/get-company.query';
+import { CompanyDTO } from '../../models/dtos/company.dto';
 
 @Component({
   selector: 'app-company-settings',
@@ -15,6 +17,7 @@ import { UnionService } from '../../services/api-services/union.service';
 export class CompanySettingsComponent implements OnInit, OnDestroy {
   private navSubscription!: Subscription;
   isNavigationOpen = false;
+  companyDTO: CompanyDTO | null = null;
 
   constructor(
     private navigationService: NavigationStateService,
@@ -27,6 +30,17 @@ export class CompanySettingsComponent implements OnInit, OnDestroy {
     this.navSubscription = this.navigationService.navigationOpen$.subscribe(state => {
       this.isNavigationOpen = state;
     });
+
+    const query: GetCompanyQuery = {
+      username: localStorage.getItem('username'),
+      companyId: Number(localStorage.getItem('companyId'))
+    }
+
+    this.unionService.getCompany(query).subscribe(
+      answer => {
+        this.companyDTO = answer;
+      }
+    )
   }
 
   ngOnDestroy(): void {

@@ -1,8 +1,8 @@
 <div class="settings-container" [class.navigation-open]="isNavigationOpen">
   <div class="grid-item"></div>
   <div class="grid-item">
-    <div class="main-text">Name: qwertyu</div>
-    <div class="main-text">Description: asdfghj</div>
+    <div class="main-text">Name: {{ companyDTO?.name || 'N/A' }}</div>
+    <div class="main-text">Description: {{ companyDTO?.description || 'N/A' }}</div>
     <button class="main-button">Change Company</button>
     <button class="main-button" (click)="getCompanyReport()">GetReport</button>
     <button class="main-button-red" (click)="removeCompany()">Remove Company</button>
